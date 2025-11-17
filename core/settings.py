@@ -1,10 +1,8 @@
 from pathlib import Path
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-STATICFILES_DIRS = [BASE_DIR / "static",]
+STATICFILES_DIRS = [BASE_DIR / "static", ]
 STATIC_URL = 'static/'
-
 
 SECRET_KEY = 'django-insecure-42dr5mfn%x61rvd%+0e0-gi2q3tedoh97jacscuc#0kbiq2_q)'
 DEBUG = True
@@ -55,10 +53,21 @@ TEMPLATES = [
     },
 ]
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'qr_menu',
+        'USER': 'qr_menu_admin',
+        'PASSWORD': 'asd',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
