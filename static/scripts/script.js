@@ -12,7 +12,11 @@ function doFilter(q) {
     const show = el => el.style.display = '';
     const hide = el => el.style.display = 'none';
 
-    if (!term) { menuCards.forEach(show); catCards.forEach(show); return; }
+    if (!term) {
+        menuCards.forEach(show);
+        catCards.forEach(show);
+        return;
+    }
 
     menuCards.forEach(card => {
         const tags = (card.dataset.tags || '').toLowerCase();
@@ -27,7 +31,11 @@ function doFilter(q) {
 }
 
 search.addEventListener('input', e => doFilter(e.target.value));
-clearBtn.addEventListener('click', () => { search.value = ''; doFilter(''); search.focus(); });
+clearBtn.addEventListener('click', () => {
+    search.value = '';
+    doFilter('');
+    search.focus();
+});
 
 // Category click scroll to menu and pre-filter (optional: wires term by heading)
 document.querySelectorAll('#catList .cat').forEach(cat => {

@@ -2,11 +2,22 @@ from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+STATICFILES_DIRS = [BASE_DIR / "static",]
+STATIC_URL = 'static/'
+
+
 SECRET_KEY = 'django-insecure-42dr5mfn%x61rvd%+0e0-gi2q3tedoh97jacscuc#0kbiq2_q)'
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'Asia/Baku'
+USE_I18N = True
+USE_TZ = True
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+WSGI_APPLICATION = 'core.wsgi.application'
+ROOT_URLCONF = 'core.urls'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -16,7 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'PermissionsApp',
-    'QR_menu',
+    'QR_menu'
 ]
 
 MIDDLEWARE = [
@@ -28,8 +39,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
@@ -46,10 +55,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'core.wsgi.application'
-
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -57,23 +62,9 @@ DATABASES = {
     }
 }
 
-
-
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
-
-
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Baku'
-USE_I18N = True
-USE_TZ = True
-
-
-STATIC_URL = 'static/'
-
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -1,6 +1,6 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="az">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,8 +8,8 @@
   <meta name="description"
     content="Modern eco-friendly cafe single-page website: hero, info, menu grid, categories, search." />
   <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
-  <link rel="stylesheet" href="./style/reset.css">
-  <link rel="stylesheet" href="./style/main.css">
+  <link rel="stylesheet" href="{% static 'style/reset.css' %}">
+  <link rel="stylesheet" href="{% static 'style/main.css' %}">
 </head>
 
 <body>
@@ -169,7 +169,7 @@
     © <span id="year"></span> EcoCafe. Hazırlayan: single‑page demo.
   </footer>
 
-  <script src="./scripts/script.js"></script>
+  <script src="{% static 'scripts/script.js' %}"></script>
 </body>
 
 </html>
