@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class QrMenuConfig(AppConfig):
+class PublicConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'QR_menu'
+    name = 'public'
