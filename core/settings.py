@@ -23,23 +23,22 @@ PUBLIC_SCHEMA_NAME = "public"
 SHARED_APPS = (
     "django_tenants",
     "public",
-    # "django.contrib.contenttypes",
-    # "django.contrib.sessions",
-    # "django.contrib.messages",
-    # "django.contrib.staticfiles",
-    # "django.contrib.admin",
-    # "django.contrib.auth"
-
-)
-
-TENANT_APPS = (
-    "menus",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.admin",
     "django.contrib.auth"
+)
+
+TENANT_APPS = (
+    "qr_menu_app",
+    # "django.contrib.contenttypes",
+    # "django.contrib.sessions",
+    # "django.contrib.messages",
+    # "django.contrib.staticfiles",
+    # "django.contrib.admin",
+    # "django.contrib.auth"
 )
 
 INSTALLED_APPS = SHARED_APPS + TENANT_APPS
@@ -76,6 +75,13 @@ TEMPLATES = [
         },
     },
 ]
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 DATABASES = {
     "default": {
