@@ -8,6 +8,7 @@
     <meta name="description"
           content="Modern eco-friendly cafe single-page website: hero, info, menu grid, categories, search."/>
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'style/reset.css' %}">
     <link rel="stylesheet" href="{% static 'style/main.css' %}">
 </head>
@@ -16,13 +17,17 @@
 <!-- Header -->
 <header class="site-header">
     <div class="wrap">
-        <div class="row">
-            <div class="brand"><span class="brand-mark" aria-hidden="true"></span> EcoCafe</div>
+        <div class="row" method="post">
+            {% csrf_token %}
+            <div id="editable_h1" contenteditable="false" class="brand">
+                {{ navbar.restoran_name }}
+            </div>
             <div class="space"></div>
             <nav class="nav" aria-label="Primary">
-                <a class="chip" href="#menu">Menyu</a>
-                <a class="chip" href="#categories">Kateqoriyalar</a>
-                <a class="chip" href="#contact">Əlaqə</a>
+
+                <a class="chip" href="#menu"><i class="fa-brands fa-facebook"></i> test</a>
+                <a class="chip" href="#categories"><i class="fa-brands fa-facebook"></i></a>
+                <a class="chip" href="#contact"><i class="fa-brands fa-facebook"></i></a>
                 <span class="lang" role="button" aria-label="Dil">AZ / EN</span>
             </nav>
         </div>
@@ -171,6 +176,9 @@
 </footer>
 
 <script src="{% static 'scripts/script.js' %}"></script>
+{% if user.is_staff or user.superuser %}
+    <script src="{% static 'scripts/editible.js' %}"></script>
+{% endif %}
 </body>
 
 </html>

@@ -1,9 +1,18 @@
 from django.db import models
 
 class NavbarItem(models.Model):
-    restoran_name = models.CharField(max_length=20)
-    restoran_logo = models.ImageField(upload_to='restoran_logos/')
+    restoran_name = models.CharField(max_length=200,null=True,blank=True)
+    restoran_logo = models.ImageField(upload_to='restoran_logos/',null=True,blank=True)
 
 
     def __str__(self):
         return self.restoran_name
+
+
+class NavbarSocialMedia(models.Model):
+    restoran = models.ForeignKey("NavbarItem", on_delete=models.CASCADE, related_name='social_medias')
+    social_media_icon = models.CharField(max_length=100,null=True,blank=True)
+    social_media_link = models.URLField(max_length=200,null=True,blank=True)
+
+    def __str__(self):
+        return self.social_media_icon + NavbarItem.restoran_name
