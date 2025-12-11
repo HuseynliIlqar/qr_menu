@@ -24,10 +24,25 @@
             </div>
             <div class="space"></div>
             <nav class="nav" aria-label="Primary">
-
-                <a class="chip" href="#menu"><i class="fa-brands fa-facebook"></i> test</a>
-                <a class="chip" href="#categories"><i class="fa-brands fa-facebook"></i></a>
-                <a class="chip" href="#contact"><i class="fa-brands fa-facebook"></i></a>
+                {% if user.is_staff or user.is_superuser %}
+                    <div class="social-actions">
+                        <i class="fa-solid fa-pen-to-square" id="social_media_add_button"></i>
+                        <form id="socialPopup" class="popup deactive">
+                            {% csrf_token %}
+                            <input type="text" placeholder="Platform adı"/>
+                            <input type="url" placeholder="URL və ya handle"/>
+                            <button id="social_media_submit_button" type="submit" value="Əlavə et" class="socialPopupButton">
+                        </form>
+                    </div>
+                {% endif %}
+                {% for social_media in social_media_navbar %}
+                    <a class="chip" href="{{ social_media.social_media_link }}" target="_blank"><i
+                            class="fa-brands fa-{{ social_media.social_media_icon }} social_media_icons"></i>{{ social_media.social_media_icon }}
+                        {% if user.is_superuser or user.is_staff %}
+                            <a class="fa-solid fa-trash-can"></a>
+                        {% endif %}
+                    </a>
+                {% endfor %}
                 <span class="lang" role="button" aria-label="Dil">AZ / EN</span>
             </nav>
         </div>
