@@ -1,6 +1,8 @@
 const editableElements = document.getElementById('editable_h1');
 const socialMediaElements = document.getElementById('social_media_add_button');
 const socialPopup = document.getElementById('socialPopup');
+const mainSection_h1 = document.getElementById("main_section_h1");
+const mainSectionSub = document.getElementById(("main_section_sub"));
 
 function getCookie(name) {
     let cookieValue = null;
@@ -18,7 +20,7 @@ function getCookie(name) {
 }
 
 
-function eventClict(element) {
+function eventClict(element,endpoint,fieldName) {
     element.addEventListener('click', function () {
         console.log("DEBUG for click");
         element.contentEditable = true;
@@ -32,10 +34,10 @@ function eventClict(element) {
 
             const newText = element.innerText.trim();
 
-            fetch("update_page/", {
+            fetch(endpoint, {
                 method: "POST", headers: {
                     "Content-Type": "application/x-www-form-urlencoded", "X-CSRFToken": tokenise,
-                }, body: "editable_name=" + encodeURIComponent(newText)
+                }, body: `${fieldName}=${encodeURIComponent(newText)}`
             }).then(response => {
                 if (response.ok) {
                     console.log("Update successful");
@@ -76,4 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const tokenise = getCookie("csrftoken");
 openCloseFunction(socialPopup, socialMediaElements);
-eventClict(editableElements);
+eventClict(editableElements, "/update_page/", "editable_name");
+eventClict(mainSection_h1,"/update_page/","main_section_h1");
+eventClict(mainSectionSub,"/update_page/","main_section_sub");

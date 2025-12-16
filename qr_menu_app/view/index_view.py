@@ -1,11 +1,11 @@
 from django.shortcuts import render
 
 from qr_menu_app.forms import NavbarSocialMediaForm
-from qr_menu_app.models.navbar_model import NavbarSocialMedia, NavbarItem
+from qr_menu_app.models.navbar_model import NavbarSocialMedia, MainSection
 
 
 def index_view(request):
-    navbar = NavbarItem.objects.first()
+    navbar = MainSection.objects.first()
     social_media_navbar = NavbarSocialMedia.objects.all()
     form = NavbarSocialMediaForm()
 

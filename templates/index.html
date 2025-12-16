@@ -61,16 +61,16 @@
 <section class="hero">
     <div class="wrap">
         <div class="hero-grid">
-            <div>
-                <h1 class="title">Şəhərin ən sakit küncündə <span style="color:var(--brown)">eco-friendly</span> kafe.
+            <div method="post">
+                {% csrf_token %}
+                <h1 class="title" id="main_section_h1">{{ navbar.restoran_main_text }}
                 </h1>
-                <p class="subtitle">Təbiətdən ilhamlanan dadlar, yüngül, rahat atmosfer və hər zövqə uyğun menyu. Bir
-                    səhifəlik təcrübə: yuxarıda brend, aşağıda menyu və kateqoriyalar.</p>
-                <div class="cta">
-                    <a class="btn primary" href="#menu">Menyunu aç</a>
-                    <a class="btn" href="#order">Çatdırılma</a>
-                    <a class="btn" href="#story">Brend hekayəsi</a>
-                </div>
+                <p class="subtitle" id="main_section_sub">{{ navbar.restoran_sub_text }}</p>
+                {#                <div class="cta">#}
+                {#                    <a class="btn primary" href="#menu">Menyunu aç</a>#}
+                {#                    <a class="btn" href="#order">Çatdırılma</a>#}
+                {#                    <a class="btn" href="#story">Brend hekayəsi</a>#}
+                {#                </div>#}
             </div>
             <div class="hero-media" aria-hidden="true">
                 <img alt="Cafe lifestyle"

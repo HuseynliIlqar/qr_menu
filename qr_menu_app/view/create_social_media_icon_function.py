@@ -2,18 +2,18 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from qr_menu_app.forms import NavbarSocialMediaForm
-from qr_menu_app.models.navbar_model import NavbarItem, NavbarSocialMedia
+from qr_menu_app.models.navbar_model import MainSection, NavbarSocialMedia
 
 
 @login_required
 def add_social_media(request, navbar_id):
-    navbar = get_object_or_404(NavbarItem, id=navbar_id)
+    navbar = get_object_or_404(MainSection, id=navbar_id)
 
     if request.method == "POST":
         form = NavbarSocialMediaForm(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.restoran = navbar
+            obj.main_section = navbar
             obj.save()
             return redirect("home")
     else:
