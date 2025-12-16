@@ -27,11 +27,14 @@
                 {% if user.is_staff or user.is_superuser %}
                     <div class="social-actions">
                         <i class="fa-solid fa-pen-to-square" id="social_media_add_button"></i>
-                        <form id="socialPopup" class="popup deactive">
+                        <form id="socialPopup" class="popup deactive"
+                              method="post"
+                              action="{% url 'add_social_media' navbar.id %}">
                             {% csrf_token %}
-                            <input type="text" placeholder="Platform adı"/>
-                            <input type="url" placeholder="URL və ya handle"/>
-                            <button id="social_media_submit_button" type="submit" value="Əlavə et" class="socialPopupButton">
+                            {{ form.social_media_icon }}
+                            {{ form.social_media_link }}
+                            <button type="submit" class="socialPopupButton">Əlavə et</button>
+                            {{ form.errors }}
                         </form>
                     </div>
                 {% endif %}
@@ -39,7 +42,12 @@
                     <a class="chip" href="{{ social_media.social_media_link }}" target="_blank"><i
                             class="fa-brands fa-{{ social_media.social_media_icon }} social_media_icons"></i>{{ social_media.social_media_icon }}
                         {% if user.is_superuser or user.is_staff %}
-                            <a class="fa-solid fa-trash-can"></a>
+                            <form method="post"
+                                  action="{% url 'delete_social_media' social_media.id %}"
+                                  style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="fa-solid fa-trash-can" title="Sil"></button>
+                            </form>
                         {% endif %}
                     </a>
                 {% endfor %}

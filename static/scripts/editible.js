@@ -1,11 +1,6 @@
 const editableElements = document.getElementById('editable_h1');
 const socialMediaElements = document.getElementById('social_media_add_button');
 const socialPopup = document.getElementById('socialPopup');
-const socialMediaPopupSubmitButton = document.getElementById('social_media_submit_button');
-
-
-// const tokenise = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-
 
 function getCookie(name) {
     let cookieValue = null;
@@ -61,24 +56,24 @@ function openCloseFunction(popupElement, triggerElement) {
 }
 
 
-function addSocialMediaIconsDatabase(element, trigger, limit) {
-    trigger.addEventListener("click", function (event) {
-        event.preventDefault();
 
-        const element_query = element.querySelectorAll("input")
-        const data = {}
+document.addEventListener("DOMContentLoaded", () => {
+  const MAX_COUNT = 3;
 
-        element_query.forEach(input => {
-            const key = input.name;
-            const value = input.value.trim();
-            data[key] = value;
-        });
-        console.log("Toplanan data:", data);
-    });
-}
+  const items = document.querySelectorAll(".social_media_icons");
+  const addButton = document.getElementById("social_media_add_button");
+
+  if (!addButton) return;
+
+  if (items.length >= MAX_COUNT) {
+    addButton.classList.add("deactive");
+    addButton.style.pointerEvents = "none";
+    addButton.style.opacity = "0.4";
+  }
+});
 
 
-addSocialMediaIconsDatabase(socialPopup,socialMediaPopupSubmitButton,2);
+
 const tokenise = getCookie("csrftoken");
 openCloseFunction(socialPopup, socialMediaElements);
 eventClict(editableElements);

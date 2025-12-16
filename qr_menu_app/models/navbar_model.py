@@ -19,6 +19,8 @@ class NavbarSocialMedia(models.Model):
         return self.social_media_icon
 
     def save(self, *args, **kwargs):
-        if not self.pk and NavbarItem.objects.count() >= 3:
-            raise ValidationError("Yalnız 3 obyekt yaratmağa icazə verilir.")
+        if not self.pk:
+            if NavbarSocialMedia.objects.filter(restoran=self.restoran).count() >= 3:
+                raise ValidationError("Yalnız 3 social media əlavə etməyə icazə verilir.")
         super().save(*args, **kwargs)
+
