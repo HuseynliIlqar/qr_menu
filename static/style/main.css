@@ -147,7 +147,7 @@ body {
 }
 
 .subtitle {
-    color: var(--muted);
+    /*color: var(--muted);*/
     margin-top: 10px;
     max-width: 52ch
 }
