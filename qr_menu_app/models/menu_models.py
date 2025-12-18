@@ -21,6 +21,7 @@ class MenuItem(models.Model):
 
 
 class ItemCategory(models.Model):
+    menu_item_relation = models.ForeignKey("MenuItem", on_delete=models.CASCADE, related_name="menu_item_relation")
     category_name = models.CharField(max_length=20, null=True, blank=True)
     active_boolean = models.BooleanField(default=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -28,20 +29,3 @@ class ItemCategory(models.Model):
 
     def __str__(self):
         return self.category_name
-
-
-class HeroSlide(models.Model):
-    title_small = models.CharField(max_length=50, null=True, blank=True)
-    title_big = models.CharField(max_length=120, null=True, blank=True)
-    subtitle_big = models.CharField(max_length=120, null=True, blank=True)
-    button_text = models.CharField(max_length=30, default="Learn More", null=True, blank=True)
-    button_url = models.CharField(max_length=255, default="#", null=True, blank=True)
-    image = models.ImageField(upload_to="hero_slides/", null=True, blank=True)
-    order = models.PositiveIntegerField(default=0, null=True, blank=True)
-    is_active = models.BooleanField(default=True,)
-
-    class Meta:
-        ordering = ["order", "id"]
-
-    def __str__(self):
-        return self.title_big

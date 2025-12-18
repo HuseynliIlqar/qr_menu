@@ -73,7 +73,6 @@ document.querySelectorAll('#catList .cat').forEach(cat => {
     // autoplay
     let timer = setInterval(() => setActive(idx + 1), 4500);
 
-    // pause on hover
     root.addEventListener('mouseenter', () => clearInterval(timer));
     root.addEventListener('mouseleave', () => {
         timer = setInterval(() => setActive(idx + 1), 4500);

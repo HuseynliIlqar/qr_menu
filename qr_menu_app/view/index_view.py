@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from qr_menu_app.forms import NavbarSocialMediaForm
-from qr_menu_app.models.menu_models import HeroSlide
-from qr_menu_app.models.navbar_model import NavbarSocialMedia, MainSection, InfoSection
+from qr_menu_app.models.navbar_model import NavbarSocialMedia, MainSection, InfoSection, HeroSlide
 
 
 def index_view(request):
@@ -11,11 +10,12 @@ def index_view(request):
     form = NavbarSocialMediaForm()
     slides = HeroSlide.objects.filter(is_active=True)
 
+
     context = {
         'navbar': navbar,
         'social_media_navbar': social_media_navbar,
         'form': form,
-        "info_sections":info_section_obj,
+        "info_sections": info_section_obj,
         "slides": slides,
     }
 
@@ -24,4 +24,3 @@ def index_view(request):
         'index.html',
         context
     )
-

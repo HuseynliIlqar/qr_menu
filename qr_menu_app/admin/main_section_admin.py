@@ -1,7 +1,6 @@
 from django.contrib import admin
-
-from qr_menu_app.models.menu_models import HeroSlide
-from qr_menu_app.models.navbar_model import MainSection, NavbarSocialMedia, InfoSection
+from qr_menu_app.models.navbar_model import HeroSlide
+from qr_menu_app.models.navbar_model import NavbarSocialMedia, InfoSection, MainSection
 
 
 class SocialMediaInLine(admin.TabularInline):
@@ -24,6 +23,5 @@ class NavbarItemAdmin(admin.ModelAdmin):
 
 @admin.register(HeroSlide)
 class HeroSlideAdmin(admin.ModelAdmin):
-    list_display = ("id", "title_big", "order", "is_active")
-    list_editable = ("order", "is_active")
+    list_display = ("id", "title_big","is_active")
     search_fields = ("title_big", "title_small")

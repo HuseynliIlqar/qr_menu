@@ -1,8 +1,8 @@
 const editableElements = document.getElementById('editable_h1');
 const socialMediaElements = document.getElementById('social_media_add_button');
 const socialPopup = document.getElementById('socialPopup');
-const mainSection_h1 = document.getElementById("main_section_h1");
-const mainSectionSub = document.getElementById(("main_section_sub"));
+// const mainSection_h1 = document.getElementById("main_section_h1");
+// const mainSectionSub = document.getElementById(("main_section_sub"));
 
 function getCookie(name) {
     let cookieValue = null;

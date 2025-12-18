@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 class MainSection(models.Model):
     restoran_name = models.CharField(max_length=200, null=True, blank=True)
     restoran_logo = models.ImageField(upload_to='restoran_logos/', null=True, blank=True)
-    restoran_main_text = models.CharField(max_length=100, null=True,blank=True)
+    restoran_main_text = models.CharField(max_length=100, null=True, blank=True)
     restoran_sub_text = models.CharField(max_length=100, null=True, blank=True)
     restoran_main_slider_image = models.ImageField(upload_to='restoran_main_slider/', null=True, blank=True)
     active_boolean = models.BooleanField(default=True, null=True, blank=True)
@@ -15,7 +15,6 @@ class MainSection(models.Model):
     def __str__(self):
         return self.restoran_name
 
-
     def save(self, *args, **kwargs):
         if not self.pk:
             if MainSection.objects.count() >= 1:
@@ -24,13 +23,12 @@ class MainSection(models.Model):
 
 
 class InfoSection(models.Model):
-    main_section = models.ForeignKey("MainSection", on_delete=models.CASCADE,related_name="main_section")
+    main_section = models.ForeignKey("MainSection", on_delete=models.CASCADE, related_name="main_section")
     main_text = models.CharField(max_length=20, null=True, blank=True)
     sub_text = models.CharField(max_length=100, null=True, blank=True)
     active_boolean = models.BooleanField(default=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
 
     def __str__(self):
         return self.main_text
@@ -50,7 +48,6 @@ class NavbarSocialMedia(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
     def __str__(self):
         return self.social_media_icon
 
@@ -59,3 +56,16 @@ class NavbarSocialMedia(models.Model):
             if NavbarSocialMedia.objects.filter(main_section=self.main_section).count() >= 3:
                 raise ValidationError("Yalnız 3 social media əlavə etməyə icazə verilir.")
         super().save(*args, **kwargs)
+
+
+class HeroSlide(models.Model):
+    title_small = models.CharField(max_length=50, null=True, blank=True, default='Default text')
+    title_big = models.CharField(max_length=120, null=True, blank=True, default='Default text')
+    subtitle_big = models.CharField(max_length=120, null=True, blank=True, default='Default text')
+    button_text = models.CharField(max_length=30, null=True, blank=True, default='Default button')
+    button_url = models.CharField(max_length=255, null=True, blank=True, default='#')
+    image = models.ImageField(upload_to="hero_slides/", null=True, blank=True)
+    is_active = models.BooleanField(default=True, )
+
+    def __str__(self):
+        return self.title_big

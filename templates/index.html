@@ -115,7 +115,9 @@
                         data-to="{{ forloop.counter0 }}"></button>
             {% endfor %}
             {% if user.is_staff or user.is_sueradmin %}
-                <i class="fa-solid fa-circle-plus"></i>
+                <div method="post" action="" id="add_index_slider_button">
+                    <i class="fa-solid fa-circle-plus"></i>
+                </div>
             {% endif %}
         </div>
 

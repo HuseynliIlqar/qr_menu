@@ -7,7 +7,6 @@ from qr_menu_app.models.navbar_model import MainSection
 
 @login_required
 @require_POST
-
 def update_page_h1(request):
 
     editable_field = None
@@ -36,12 +35,10 @@ def update_page_h1(request):
         object_name.restoran_sub_text = editable_field
         object_name.save()
 
-
-
-    print("DEBUG method:", request.method)
-    print("DEBUG content_type:", request.content_type)
-    print("DEBUG POST:", dict(request.POST))
-    print("DEBUG body raw:", request.body[:200])
+    # print("DEBUG method:", request.method)
+    # print("DEBUG content_type:", request.content_type)
+    # print("DEBUG POST:", dict(request.POST))
+    # print("DEBUG body raw:", request.body[:200])
 
     if editable_field is None:
         return JsonResponse({"error": "editable_name missing"}, status=400)
@@ -50,4 +47,3 @@ def update_page_h1(request):
         "status": "success",
         "new_name": editable_field
     })
-
