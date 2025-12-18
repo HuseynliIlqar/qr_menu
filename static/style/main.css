@@ -50,6 +50,10 @@ body {
     color: red;
 }
 
+.fa-circle-plus{
+    cursor: pointer;
+}
+
 .social_media_icons{
     font-size: 20px;
 }
@@ -113,6 +117,13 @@ body {
     background: var(--surface);
     border: 1px solid rgba(0, 0, 0, .06);
     box-shadow: var(--shadow)
+}
+
+.chip button{
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .lang {

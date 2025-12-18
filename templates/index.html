@@ -114,6 +114,9 @@
                         aria-label="Slide {{ forloop.counter }}"
                         data-to="{{ forloop.counter0 }}"></button>
             {% endfor %}
+            {% if user.is_staff or user.is_sueradmin %}
+                <i class="fa-solid fa-circle-plus"></i>
+            {% endif %}
         </div>
 
     {% endif %}
