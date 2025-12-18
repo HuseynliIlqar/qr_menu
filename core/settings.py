@@ -1,9 +1,12 @@
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_URL = "static/"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SECRET_KEY = "django-insecure-42dr5mfn%x61rvd%+0e0-gi2q3tedoh97jacscuc#0kbiq2_q)"
 DEBUG = True

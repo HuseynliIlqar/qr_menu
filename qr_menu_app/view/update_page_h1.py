@@ -46,24 +46,8 @@ def update_page_h1(request):
     if editable_field is None:
         return JsonResponse({"error": "editable_name missing"}, status=400)
 
-
-    # editable_name = request.POST.get("editable_name").translate(str.maketrans("", "", "?!."))
-
-    # object_name = MainSection.objects.first()
-    # object_name.restoran_name = editable_name
-    # object_name.save()
-
     return JsonResponse({
         "status": "success",
         "new_name": editable_field
     })
 
-# @login_required
-# @require_POST
-# def update_page_main_section(request):
-#     if not request.user.is_staff or not request.user.is_superuser:
-#         return HttpResponseForbidden("You do not have permission to perform this action.")
-#
-#     editable_main_text = request.POST.get("editable_main_text").translate(str.maketrans("", "", "?!."))
-#
-#     pass

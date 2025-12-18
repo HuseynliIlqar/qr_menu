@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'style/reset.css' %}">
     <link rel="stylesheet" href="{% static 'style/main.css' %}">
+    <link rel="stylesheet" href="{% static 'style/swiper-bundle.min.css' %}">
 </head>
 
 <body>
@@ -39,8 +40,9 @@
                     </div>
                 {% endif %}
                 {% for social_media in social_media_navbar %}
-                    <a class="chip" href="{{ social_media.social_media_link }}" target="_blank"><i
-                            class="fa-brands fa-{{ social_media.social_media_icon }} social_media_icons"></i>{{ social_media.social_media_icon }}
+                    <a class="chip" href="{{ social_media.social_media_link }}" target="_blank">
+                        <i class="fa-brands fa-{{ social_media.social_media_icon }} social_media_icons"></i>
+                        {{ social_media.social_media_icon }}
                         {% if user.is_superuser or user.is_staff %}
                             <form method="post"
                                   action="{% url 'delete_social_media' social_media.id %}"
@@ -57,53 +59,76 @@
     </div>
 </header>
 
-<!-- Hero -->
-<section class="hero">
-    <div class="wrap">
-        <div class="hero-grid">
-            <div method="post">
-                {% csrf_token %}
-                <h1 class="title" id="main_section_h1">{{ navbar.restoran_main_text }}
-                </h1>
-                <p class="subtitle" id="main_section_sub">{{ navbar.restoran_sub_text }}</p>
-                {#                <div class="cta">#}
-                {#                    <a class="btn primary" href="#menu">Menyunu aç</a>#}
-                {#                    <a class="btn" href="#order">Çatdırılma</a>#}
-                {#                    <a class="btn" href="#story">Brend hekayəsi</a>#}
-                {#                </div>#}
+<section class="hero-slider" id="heroSlider">
+    <div class="hero-slides">
+        {% for s in slides %}
+            <div class="hero-slide {% if forloop.first %}is-active{% endif %}"
+                 style="{% if s.image %}background-image:url('{{ s.image.url }}');{% endif %}"
+                 data-index="{{ forloop.counter0 }}">
+                <div class="hero-overlay"></div>
+
+                <div class="wrap">
+                    <div class="hero-grid">
+                        <div method="post">
+                            {% csrf_token %}
+
+                            <h1 class="title" id="main_section_h1">
+                                {{ s.title_big|default:navbar.restoran_main_text }}
+                                {% if s.subtitle_big %}<br>{{ s.subtitle_big }}{% endif %}
+                            </h1>
+
+                            <p class="subtitle" id="main_section_sub">
+                                {{ s.title_small|default:navbar.restoran_sub_text }}
+                            </p>
+
+                            {% if s.button_url %}
+                                <a class="btn primary"
+                                   href="{{ s.button_url }}">{{ s.button_text|default:"Learn More" }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="hero-media" aria-hidden="true">
-                <img alt="Cafe lifestyle"
-                     src="https://images.unsplash.com/photo-1517256064527-09c73fc73e38?q=80&w=1600&auto=format&fit=crop"/>
+        {% empty %}
+            <!-- Fallback -->
+            <div class="hero-slide is-active"
+                 style="background-image:url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600&auto=format&fit=crop');">
+                <div class="hero-overlay"></div>
+                <div class="wrap">
+                    <div class="hero-grid">
+                        <div>
+                            <h1 class="title" id="main_section_h1">{{ navbar.restoran_main_text }}</h1>
+                            <p class="subtitle" id="main_section_sub">{{ navbar.restoran_sub_text }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        {% endfor %}
     </div>
+
+    {% if slides|length > 1 %}
+        <div class="hero-indicators" id="heroIndicators" aria-label="Slider indicators">
+            {% for s in slides %}
+                <button type="button"
+                        class="hero-dot {% if forloop.first %}is-active{% endif %}"
+                        aria-label="Slide {{ forloop.counter }}"
+                        data-to="{{ forloop.counter0 }}"></button>
+            {% endfor %}
+        </div>
+
+    {% endif %}
 </section>
 
 <!-- Quick Info -->
 <section class="info">
     <div class="wrap">
         <div class="info-grid" role="list">
-            <div class="info-item" role="listitem">
-                <div class="info-title">Wi‑Fi</div>
-                <div class="info-text">EcoCafe-Guest • Şifrə: leaf2025</div>
-            </div>
-            <div class="info-item" role="listitem">
-                <div class="info-title">Ünvanlar</div>
-                <div class="info-text">Mərkəz filialı • Park küç. 12 | Azadlıq filialı • Mirasa 43</div>
-            </div>
-            <div class="info-item" role="listitem">
-                <div class="info-title">Saatlar</div>
-                <div class="info-text">Hər gün 08:00–01:00</div>
-            </div>
-            <div class="info-item" role="listitem">
-                <div class="info-title">Telefon</div>
-                <div class="info-text">+994 51 206 20 66</div>
-            </div>
-            <div class="info-item" role="listitem">
-                <div class="info-title">Pet‑friendly</div>
-                <div class="info-text">Dostunu da gətir</div>
-            </div>
+            {% for info_section in info_sections %}
+                <div class="info-item" role="listitem">
+                    <div class="info-title">{{ info_section.main_text }}</div>
+                    <div class="info-text">{{ info_section.sub_text }}</div>
+                </div>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -114,7 +139,6 @@
         <h2>Menyu seçmələri</h2>
         <p class="lead">Sənaye foto bankından deyil, isti həyat tərzi vizualları.</p>
         <div class="menu-grid" id="menuGrid">
-            <!-- Cards injected below as static HTML for demo -->
             <article class="card" data-tags="drink coffee cold">
                 <div class="card-media"><img
                         src="https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1600&auto=format&fit=crop"
@@ -165,43 +189,35 @@
             <a class="cat" href="#menu" data-tags="dessert sweet pastry">
                 <img src="https://images.unsplash.com/photo-1511911063855-0e809594f5bb?q=80&w=1600&auto=format&fit=crop"
                      alt="Desertlər">
-                <div class="overlay">
-                    <h3>Desertlər</h3>
-                </div>
+                <div class="overlay"><h3>Desertlər</h3></div>
             </a>
             <a class="cat" href="#menu" data-tags="sandwich lunch">
                 <img src="https://images.unsplash.com/photo-1498579150354-977475b7ea0b?q=80&w=1600&auto=format&fit=crop"
                      alt="Sendviçlər">
-                <div class="overlay">
-                    <h3>Sendviçlər</h3>
-                </div>
+                <div class="overlay"><h3>Sendviçlər</h3></div>
             </a>
             <a class="cat" href="#menu" data-tags="bakery dry">
                 <img src="https://images.unsplash.com/photo-1519336555923-59661f41bb0f?q=80&w=1600&auto=format&fit=crop"
                      alt="Quru mallar">
-                <div class="overlay">
-                    <h3>Quru mallar</h3>
-                </div>
+                <div class="overlay"><h3>Quru mallar</h3></div>
             </a>
             <a class="cat" href="#menu" data-tags="pastry croissant">
                 <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=1600&auto=format&fit=crop"
                      alt="Mayalı məhsullar">
-                <div class="overlay">
-                    <h3>Mayalı məhsullar</h3>
-                </div>
+                <div class="overlay"><h3>Mayalı məhsullar</h3></div>
             </a>
         </div>
     </div>
 </section>
 
 <footer id="contact" class="wrap">
-    © <span id="year"></span> EcoCafe. Hazırlayan: single‑page demo.
+    © <span id="year"></span> EcoCafe. Hazırlayan: single-page demo.
 </footer>
 
 <script src="{% static 'scripts/script.js' %}"></script>
 {% if user.is_staff or user.superuser %}
     <script src="{% static 'scripts/editible.js' %}"></script>
 {% endif %}
-</body>
 
+</body>
 </html>

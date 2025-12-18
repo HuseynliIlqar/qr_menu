@@ -79,5 +79,5 @@ document.addEventListener("DOMContentLoaded", () => {
 const tokenise = getCookie("csrftoken");
 openCloseFunction(socialPopup, socialMediaElements);
 eventClict(editableElements, "/update_page/", "editable_name");
-eventClict(mainSection_h1,"/update_page/","main_section_h1");
-eventClict(mainSectionSub,"/update_page/","main_section_sub");
+// eventClict(mainSection_h1,"/update_page/","main_section_h1");
+// eventClict(mainSectionSub,"/update_page/","main_section_sub");
