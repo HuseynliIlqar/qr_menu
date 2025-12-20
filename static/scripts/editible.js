@@ -1,8 +1,6 @@
 const editableElements = document.getElementById('editable_h1');
 const socialMediaElements = document.getElementById('social_media_add_button');
 const socialPopup = document.getElementById('socialPopup');
-// const mainSection_h1 = document.getElementById("main_section_h1");
-// const mainSectionSub = document.getElementById(("main_section_sub"));
 
 function getCookie(name) {
     let cookieValue = null;
@@ -59,25 +57,6 @@ function openCloseFunction(popupElement, triggerElement) {
 
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  const MAX_COUNT = 3;
-
-  const items = document.querySelectorAll(".social_media_icons");
-  const addButton = document.getElementById("social_media_add_button");
-
-  if (!addButton) return;
-
-  if (items.length >= MAX_COUNT) {
-    addButton.classList.add("deactive");
-    addButton.style.pointerEvents = "none";
-    addButton.style.opacity = "0.4";
-  }
-});
-
-
-
 const tokenise = getCookie("csrftoken");
 openCloseFunction(socialPopup, socialMediaElements);
 eventClict(editableElements, "/update_page/", "editable_name");
-// eventClict(mainSection_h1,"/update_page/","main_section_h1");
-// eventClict(mainSectionSub,"/update_page/","main_section_sub");

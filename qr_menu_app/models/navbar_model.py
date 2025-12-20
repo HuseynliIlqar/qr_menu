@@ -35,8 +35,8 @@ class InfoSection(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            if InfoSection.objects.filter(main_section=self.main_section).count() >= 3:
-                raise ValidationError("Yalnız 3 social media əlavə etməyə icazə verilir.")
+            if InfoSection.objects.count() >= 5:
+                raise ValidationError("Yalnız 5 social media əlavə etməyə icazə verilir.")
         super().save(*args, **kwargs)
 
 
@@ -53,7 +53,7 @@ class NavbarSocialMedia(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            if NavbarSocialMedia.objects.filter(main_section=self.main_section).count() >= 3:
+            if NavbarSocialMedia.objects.count() >= 3:
                 raise ValidationError("Yalnız 3 social media əlavə etməyə icazə verilir.")
         super().save(*args, **kwargs)
 
@@ -69,3 +69,10 @@ class HeroSlide(models.Model):
 
     def __str__(self):
         return self.title_big
+
+
+    def save(self, *args,**kwargs):
+        if not self.pk:
+            if HeroSlide.objects.count() >= 5:
+                raise ValidationError("Yalnız 5 Slider əlavə etməyə icazə verilir.")
+        super().save(*args, **kwargs)

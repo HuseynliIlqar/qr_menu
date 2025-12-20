@@ -12,11 +12,6 @@ SECRET_KEY = "django-insecure-42dr5mfn%x61rvd%+0e0-gi2q3tedoh97jacscuc#0kbiq2_q)
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
-SESSION_COOKIE_DOMAIN = ".example.com"
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = "Lax"
-CSRF_COOKIE_DOMAIN = ".example.com"
-CSRF_COOKIE_SECURE = True
 
 
 LANGUAGE_CODE = "en-us"

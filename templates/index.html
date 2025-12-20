@@ -25,7 +25,7 @@
             </div>
             <div class="space"></div>
             <nav class="nav" aria-label="Primary">
-                {% if user.is_staff or user.is_superuser %}
+                {% if can_add_social_media %}
                     <div class="social-actions">
                         <i class="fa-solid fa-pen-to-square" id="social_media_add_button"></i>
                         <form id="socialPopup" class="popup deactive"
@@ -40,13 +40,12 @@
                     </div>
                 {% endif %}
                 {% for social_media in social_media_navbar %}
-                    <a class="chip" href="{{ social_media.social_media_link }}" target="_blank">
+                    <a class="chip button_reset" href="{{ social_media.social_media_link }}" target="_blank">
                         <i class="fa-brands fa-{{ social_media.social_media_icon }} social_media_icons"></i>
                         {{ social_media.social_media_icon }}
                         {% if user.is_superuser or user.is_staff %}
                             <form method="post"
-                                  action="{% url 'delete_social_media' social_media.id %}"
-                                  style="display:inline;">
+                                  action="{% url 'delete_social_media' social_media.id %}">
                                 {% csrf_token %}
                                 <button type="submit" class="fa-solid fa-trash-can" title="Sil"></button>
                             </form>
@@ -114,10 +113,11 @@
                         aria-label="Slide {{ forloop.counter }}"
                         data-to="{{ forloop.counter0 }}"></button>
             {% endfor %}
-            {% if user.is_staff or user.is_sueradmin %}
-                <div method="post" action="" id="add_index_slider_button">
-                    <i class="fa-solid fa-circle-plus"></i>
-                </div>
+            {% if user.is_staff or user.is_superuser %}
+                <form class="button_reset" method="post" action="{% url 'add_index_slider' %}">
+                    {% csrf_token %}
+                    <button class="fa-solid fa-circle-plus" type="submit" name="add_index_slider"></button>
+                </form>
             {% endif %}
         </div>
 
@@ -126,15 +126,27 @@
 
 <!-- Quick Info -->
 <section class="info">
-    <div class="wrap">
+    <div class="wrap_info_grid">
         <div class="info-grid" role="list">
             {% for info_section in info_sections %}
                 <div class="info-item" role="listitem">
                     <div class="info-title">{{ info_section.main_text }}</div>
                     <div class="info-text">{{ info_section.sub_text }}</div>
+                    {% if user.is_staff or user.is_superuser %}
+                        <form class="button_reset" method="post" action="{% url 'add_index_slider' %}">
+                            {% csrf_token %}
+                            <button class="fa-solid fa-trash-can" type="submit" name="add_index_slider"></button>
+                        </form>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
+        {% if can_add_info_sections %}
+            <form class="button_reset" method="post" action="{% url 'add_index_slider' %}">
+                {% csrf_token %}
+                <button class="fa-solid fa-circle-plus" type="submit" name="add_index_slider"></button>
+            </form>
+        {% endif %}
     </div>
 </section>
 

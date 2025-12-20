@@ -54,6 +54,10 @@
     z-index: 5;
 }
 
+.hero-indicators button{
+    padding: 0%;
+}
+
 .hero-dot {
     width: 14px;
     height: 14px;
