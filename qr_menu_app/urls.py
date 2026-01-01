@@ -10,5 +10,4 @@ urlpatterns = [
     path("navbar/<int:navbar_id>/social-media/add/", add_social_media, name="add_social_media"),
     path("social-media/<int:pk>/delete/",delete_social_media,name="delete_social_media"),
     path("add_index_slider/", add_index_slider, name="add_index_slider"),
-
 ]

@@ -12,6 +12,21 @@
     <link rel="stylesheet" href="{% static 'style/reset.css' %}">
     <link rel="stylesheet" href="{% static 'style/main.css' %}">
     <link rel="stylesheet" href="{% static 'style/swiper-bundle.min.css' %}">
+    <style>
+        :root {
+            --accent: {{ theme.primary|default:"#ff6a00" }};
+            --accent-2: {{ theme.secondary|default:"#98B795" }};
+            --bg: {{ theme.background|default:"#FFF9F1" }};
+            --surface: {{ theme.surface|default:"#FFFFFF" }};
+            --text: {{ theme.text|default:"#132017" }};
+            --muted: {{ theme.muted|default:"#5B6B60" }};
+            --border: {{ theme.border|default:"#E7E3DA" }};
+            --radius: {{ theme.radius|default:18 }}px;
+            --shadow: {{ theme.shadow_css|default:"0 10px 30px rgba(0,0,0,.08)" }};
+            --hero-overlay-alpha: {{ theme.hero_overlay_alpha|default:0.45 }};
+        }
+    </style>
+
 </head>
 
 <body>
@@ -156,40 +171,18 @@
         <h2>Menyu seçmələri</h2>
         <p class="lead">Sənaye foto bankından deyil, isti həyat tərzi vizualları.</p>
         <div class="menu-grid" id="menuGrid">
-            <article class="card" data-tags="drink coffee cold">
-                <div class="card-media"><img
-                        src="https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1600&auto=format&fit=crop"
-                        alt="Iced Espresso Tonic"></div>
-                <div class="card-body">
-                    <strong>Iced Espresso Tonic</strong>
-                    <div class="badge">Yeni</div>
-                </div>
-            </article>
-            <article class="card" data-tags="drink latte sweet">
-                <div class="card-media"><img
-                        src="https://images.unsplash.com/photo-1517705008128-361805f42e86?q=80&w=1600&auto=format&fit=crop"
-                        alt="Pistachio Latte"></div>
-                <div class="card-body">
-                    <strong>Pistachio Latte</strong>
-                </div>
-            </article>
-            <article class="card" data-tags="food breakfast healthy">
-                <div class="card-media"><img
-                        src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=1600&auto=format&fit=crop"
-                        alt="Healthy Breakfast"></div>
-                <div class="card-body">
-                    <strong>Healthy Breakfast</strong>
-                    <div class="badge">Vegan</div>
-                </div>
-            </article>
-            <article class="card" data-tags="drink milkshake cold sweet">
-                <div class="card-media"><img
-                        src="https://images.unsplash.com/photo-1488477181946-6428a0291777?q=80&w=1600&auto=format&fit=crop"
-                        alt="Mixed Milkshake"></div>
-                <div class="card-body">
-                    <strong>Mixed Milkshake</strong>
-                </div>
-            </article>
+            {% for menu_item in menu_items %}
+
+                <article class="card">
+                    <div class="card-media">
+                        <img alt="{{ menu_item.category_name }}" src="{{ menu_item.category_image }}">
+                    </div>
+                    <div class="card-body">
+                        <strong>{{ menu_item.category_name }}</strong>
+                        {#                        <div class="badge">Yeni</div>#}
+                    </div>
+                </article>
+            {% endfor %}
         </div>
     </div>
 </section>

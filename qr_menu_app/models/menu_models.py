@@ -1,31 +1,37 @@
 from django.db import models
 
+class ItemCategory(models.Model):
+    category_name = models.CharField(max_length=50, null=True, blank=True)
+    category_image = models.ImageField(null=True, blank=True, upload_to="category_image/")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.category_name or ""
+
 
 class MenuItem(models.Model):
-    item_name = models.CharField(max_length=20, null=True, blank=True)
+    item_name = models.CharField(max_length=50, null=True, blank=True)
     item_description = models.TextField(null=True, blank=True)
     food_price = models.FloatField(null=True, blank=True)
     discount_price = models.FloatField(null=True, blank=True)
-    food_img = models.ImageField(null=True, blank=True, upload_to="index_slider/")
-    new_item_boolean = models.BooleanField(default=False, null=True, blank=True)
-    vegan_item_boolean = models.BooleanField(default=False, null=True, blank=True)
-    menu_item_category = models.ForeignKey("ItemCategory", on_delete=models.CASCADE, related_name="menu_item_category",
-                                           null=True,
-                                           blank=True)
-    active_boolean = models.BooleanField(default=True, null=True, blank=True)
+    food_img = models.ImageField(null=True, blank=True, upload_to="menu_items/")
+    new_item_icon = models.BooleanField(default=False)
+    vegan_item_icon = models.BooleanField(default=False)
+    halal_item_icon = models.BooleanField(default=False)
+
+    category = models.ForeignKey(
+        ItemCategory,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="items",
+    )
+
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.item_name
-
-
-class ItemCategory(models.Model):
-    menu_item_relation = models.ForeignKey("MenuItem", on_delete=models.CASCADE, related_name="menu_item_relation")
-    category_name = models.CharField(max_length=20, null=True, blank=True)
-    active_boolean = models.BooleanField(default=True, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.category_name
+        return self.item_name or ""

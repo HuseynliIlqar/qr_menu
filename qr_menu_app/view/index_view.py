@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from qr_menu_app.forms import NavbarSocialMediaForm
+from qr_menu_app.models import ItemCategory
+from qr_menu_app.models.brand_customisation import BrandTheme
 from qr_menu_app.models.navbar_model import NavbarSocialMedia, MainSection, InfoSection, HeroSlide
 
 
 def index_view(request):
-    navbar = MainSection.objects.first()
+    navbar = MainSection.objects.filter(active_boolean=True).first()
 
     social_media_qs = NavbarSocialMedia.objects.all()
     social_media_count = social_media_qs.count()
@@ -15,6 +17,8 @@ def index_view(request):
     slides = HeroSlide.objects.filter(is_active=True)
     form = NavbarSocialMediaForm()
 
+    menu_items = ItemCategory.objects.filter(is_active=True)
+
     can_add_info_section = (
         (request.user.is_staff or request.user.is_superuser) and info_section_count < 5
     )
@@ -24,7 +28,13 @@ def index_view(request):
         and social_media_count < 3
     )
 
+
+    theme = None
+    if navbar:
+        theme, _ = BrandTheme.objects.get_or_create(main_section=navbar)
+
     context = {
+        "theme": theme,
         "navbar": navbar,
         "social_media_navbar": social_media_qs,
         "can_add_social_media": can_add_social_media,
@@ -32,6 +42,6 @@ def index_view(request):
         "can_add_info_sections": can_add_info_section,
         "slides": slides,
         "form": form,
+        "menu_items": menu_items,
     }
     return render(request, "index.html", context)
-

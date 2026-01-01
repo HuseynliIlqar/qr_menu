@@ -1,15 +1,21 @@
-from qr_menu_app.models.menu_models import MenuItem, ItemCategory
 from django.contrib import admin
 
+from qr_menu_app.models import MenuItem, ItemCategory
 
-class MenuItemCategoryInline(admin.TabularInline):
-    model = ItemCategory
-    extra = 0
-    max_num = 1
 
+# class MenuItemInline(admin.TabularInline):
+#     model = MenuItem
+#     extra = 0
+#     fields = ("item_name", "food_price", "discount_price", "is_active")
+#     show_change_link = True
+
+@admin.register(ItemCategory)
+class ItemCategoryAdmin(admin.ModelAdmin):
+    list_display = ("category_name", "is_active", "created_at")
+    # inlines = [MenuItemInline]
 
 @admin.register(MenuItem)
-class MenuItenAdmin(admin.ModelAdmin):
-    list_display = ("id", "item_name", "food_price", "active_boolean")
-    list_editable = ("active_boolean", "food_price")
-    inlines = [MenuItemCategoryInline]
+class MenuItemAdmin(admin.ModelAdmin):
+    list_display = ("item_name", "category", "food_price", "is_active")
+    list_filter = ("category", "is_active")
+    search_fields = ("item_name",)
