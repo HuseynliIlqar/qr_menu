@@ -12,7 +12,7 @@ class SocialMediaInLine(admin.TabularInline):
 class InfoSectionInLine(admin.TabularInline):
     model = InfoSection
     extra = 0
-    max_num = 5
+    max_num = 10
 
 
 class HeroSliderInLine(admin.TabularInline):

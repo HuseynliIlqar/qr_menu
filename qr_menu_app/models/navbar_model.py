@@ -1,11 +1,11 @@
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 
 
 class MainSection(models.Model):
     restoran_name = models.CharField(max_length=200, null=True, blank=True)
     restoran_logo = models.ImageField(upload_to='restoran_logos/', null=True, blank=True)
-    active_boolean = models.BooleanField(default=True, null=True, blank=True)
+    is_active = models.BooleanField(default=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -20,28 +20,40 @@ class MainSection(models.Model):
 
 
 class InfoSection(models.Model):
-    main_section = models.ForeignKey("MainSection", on_delete=models.CASCADE, related_name="main_section")
-    main_text = models.CharField(max_length=20, null=True, blank=True)
-    sub_text = models.CharField(max_length=100, null=True, blank=True)
-    active_boolean = models.BooleanField(default=True, null=True, blank=True)
+    class Status(models.TextChoices):
+        DEFAULT = "circle-question"
+        WIFI_ICON = "wifi"
+        PHONE_ICON = "phone"
+        LOCATION_ICON = "location-dot"
+        DELVING_ICON = "truck"
+        WORKING_HOURS_ICON = "clock"
+        PET_FRENDLY_ICON = "paw"
+        VEGAN_ICON = "leaf"
+        INFO_ICON = "circle-info"
+
+    info_section = models.ForeignKey("MainSection", on_delete=models.CASCADE, related_name="main_section")
+    info_section_text = models.CharField(max_length=15, null=True, blank=True)
+    info_section_sub_text = models.TextField(max_length=100, null=True, blank=True)
+    info_section_icons = models.CharField(max_length=20, choices=Status.choices, default=Status.DEFAULT)
+    is_active = models.BooleanField(default=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.main_text
+        return self.info_section_text
 
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            if InfoSection.objects.count() >= 5:
-                raise ValidationError("Yalnız 5 social media əlavə etməyə icazə verilir.")
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if not self.pk:
+    #         if InfoSection.objects.count() >= 5:
+    #             raise ValidationError("Yalnız 5 social media əlavə etməyə icazə verilir.")
+    #     super().save(*args, **kwargs)
 
 
 class NavbarSocialMedia(models.Model):
     main_section = models.ForeignKey("MainSection", on_delete=models.CASCADE, related_name='social_medias')
     social_media_icon = models.CharField(max_length=100, null=True, blank=True)
     social_media_link = models.URLField(max_length=200, null=True, blank=True)
-    active_boolean = models.BooleanField(default=True, null=True, blank=True)
+    is_active = models.BooleanField(default=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

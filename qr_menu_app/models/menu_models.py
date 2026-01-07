@@ -8,7 +8,7 @@ class ItemCategory(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.category_name or ""
+        return self.category_name
 
 
 class MenuItem(models.Model):
@@ -34,4 +34,4 @@ class MenuItem(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.item_name or ""
+        return self.item_name

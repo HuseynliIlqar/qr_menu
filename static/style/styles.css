@@ -324,6 +324,9 @@ h3 {
     min-width: 0;
 }
 
+.info-card i {
+    color: var(--primary-color);
+}
 .info-label {
     color: var(--text-light);
     font-size: 0.875rem;
