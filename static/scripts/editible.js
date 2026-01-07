@@ -1,6 +1,4 @@
-const editableElements = document.getElementById('editable_h1');
-const socialMediaElements = document.getElementById('social_media_add_button');
-const socialPopup = document.getElementById('socialPopup');
+const editableHeaderElement = document.getElementById("editable_h1");
 
 function getCookie(name) {
     let cookieValue = null;
@@ -58,5 +56,5 @@ function openCloseFunction(popupElement, triggerElement) {
 
 
 const tokenise = getCookie("csrftoken");
-openCloseFunction(socialPopup, socialMediaElements);
-eventClict(editableElements, "/update_page/", "editable_name");
+// openCloseFunction(socialPopup, socialMediaElements);
+eventClict(editableHeaderElement, "/update_page/", "editable_name");

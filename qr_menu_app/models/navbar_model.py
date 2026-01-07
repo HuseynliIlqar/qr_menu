@@ -5,9 +5,6 @@ from django.core.exceptions import ValidationError
 class MainSection(models.Model):
     restoran_name = models.CharField(max_length=200, null=True, blank=True)
     restoran_logo = models.ImageField(upload_to='restoran_logos/', null=True, blank=True)
-    restoran_main_text = models.CharField(max_length=100, null=True, blank=True)
-    restoran_sub_text = models.CharField(max_length=100, null=True, blank=True)
-    restoran_main_slider_image = models.ImageField(upload_to='restoran_main_slider/', null=True, blank=True)
     active_boolean = models.BooleanField(default=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -59,6 +56,7 @@ class NavbarSocialMedia(models.Model):
 
 
 class HeroSlide(models.Model):
+    main_section = models.ForeignKey("MainSection", on_delete=models.CASCADE, related_name='hero_slide')
     title_small = models.CharField(max_length=50, null=True, blank=True, default='Default text')
     title_big = models.CharField(max_length=120, null=True, blank=True, default='Default text')
     subtitle_big = models.CharField(max_length=120, null=True, blank=True, default='Default text')
