@@ -42,11 +42,6 @@ class InfoSection(models.Model):
     def __str__(self):
         return self.info_section_text
 
-    # def save(self, *args, **kwargs):
-    #     if not self.pk:
-    #         if InfoSection.objects.count() >= 5:
-    #             raise ValidationError("Yalnız 5 social media əlavə etməyə icazə verilir.")
-    #     super().save(*args, **kwargs)
 
 
 class NavbarSocialMedia(models.Model):
@@ -69,11 +64,8 @@ class NavbarSocialMedia(models.Model):
 
 class HeroSlide(models.Model):
     main_section = models.ForeignKey("MainSection", on_delete=models.CASCADE, related_name='hero_slide')
-    title_small = models.CharField(max_length=50, null=True, blank=True, default='Default text')
     title_big = models.CharField(max_length=120, null=True, blank=True, default='Default text')
-    subtitle_big = models.CharField(max_length=120, null=True, blank=True, default='Default text')
-    button_text = models.CharField(max_length=30, null=True, blank=True, default='Default button')
-    button_url = models.CharField(max_length=255, null=True, blank=True, default='#')
+    title_small = models.CharField(max_length=50, null=True, blank=True, default='Default text')
     image = models.ImageField(upload_to="hero_slides/", null=True, blank=True)
     is_active = models.BooleanField(default=True, )
 
