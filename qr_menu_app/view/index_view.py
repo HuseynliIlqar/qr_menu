@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from qr_menu_app.forms import NavbarSocialMediaForm
-from qr_menu_app.models import ItemCategory
+from qr_menu_app.models import ItemCategory, MenuItem
 from qr_menu_app.models.brand_customisation import BrandTheme
 from qr_menu_app.models.navbar_model import NavbarSocialMedia, MainSection, InfoSection, HeroSlide
 
@@ -17,7 +17,9 @@ def index_view(request):
     slides = HeroSlide.objects.filter(is_active=True).order_by('id')
     form = NavbarSocialMediaForm()
 
-    menu_items = ItemCategory.objects.filter(is_active=True)
+    items_category = ItemCategory.objects.filter(is_active=True)
+
+    menu_items = MenuItem.objects.filter(is_active=True)
 
     can_add_info_section = (
         (request.user.is_staff or request.user.is_superuser) and info_section_count < 5
@@ -42,6 +44,7 @@ def index_view(request):
         "can_add_info_sections": can_add_info_section,
         "slides": slides,
         "form": form,
+        "items_categorys": items_category,
         "menu_items": menu_items,
     }
     return render(request, "index.html", context)

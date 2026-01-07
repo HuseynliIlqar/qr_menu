@@ -16,7 +16,7 @@
             <h1 id="editable_h1" contenteditable="false">
                 {{ navbar.restoran_name }}
             </h1>
-            </div>
+        </div>
         <div class="navbar-social">
             {% for social_media_navbar in social_media_navbars %}
                 <a href="{{ social_media_navbar.social_media_link }}" target="_blank">
@@ -95,14 +95,14 @@
     <section class="info-cards">
         {% for info_section in info_sections %}
             <div class="info-card">
-            <div class="info-icon">
-                <i class="fa-solid fa-{{ info_section.info_section_icons }}"></i>
+                <div class="info-icon">
+                    <i class="fa-solid fa-{{ info_section.info_section_icons }}"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">{{ info_section.info_section_text }}</div>
+                    <div class="info-value">{{ info_section.info_section_sub_text|linebreaks }}</div>
+                </div>
             </div>
-            <div class="info-content">
-                <div class="info-label">{{ info_section.info_section_text }}</div>
-                <div class="info-value">{{ info_section.info_section_sub_text|linebreaks }}</div>
-            </div>
-        </div>
         {% endfor %}
 
     </section>
@@ -110,22 +110,49 @@
     <!-- Categories -->
     <section class="categories-section">
         <div class="categories-container">
-            <button class="category-chip active" data-category="all">All Items</button>
-            <button class="category-chip" data-category="burgers">Burgers</button>
-            <button class="category-chip" data-category="pizza">Pizza</button>
-            <button class="category-chip" data-category="salads">Salads</button>
-            <button class="category-chip" data-category="pasta">Pasta</button>
-            <button class="category-chip" data-category="wings">Wings &amp; Sides</button>
-            <button class="category-chip" data-category="desserts">Desserts</button>
-            <button class="category-chip" data-category="drinks">Drinks</button>
+            {% for items_category in items_categorys %}
+                <button class="category-chip" data-category="all">{{ items_category.category_name }}</button>
+            {% endfor %}
         </div>
     </section>
 
     <!-- Food Grid -->
     <section class="food-grid" id="food-grid">
-        <!-- ... same food cards as in original index.html ... -->
-        <!-- copy the block from original index.html if you need the exact content; it's unchanged aside from the slider above -->
+        {% for menu_item in menu_items %}
+            <div class="food-card"
+                 data-name="Classic Burger"
+                 data-long-description="Our signature Classic Burger features a premium beef patty..."
+                 data-image="https://images.unsplash.com/photo-1761315412811-4525e421e00b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+                 data-price="12.99"
+                 data-original-price="15.99"
+                 data-badges="popular,chef-special"
+                 data-ingredients="Beef patty,Brioche bun,Lettuce,Tomato,Pickles,Onions,Special sauce"
+                 data-allergens="Gluten,Eggs,Dairy">
+
+                <div class="food-image">
+                    <img src="https://images.unsplash.com/photo-1761315412811-4525e421e00b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+                         alt="Classic Burger">
+                    <div class="discount-badge">Save $3.00</div>
+                </div>
+
+                <div class="food-content">
+                    <h3 class="food-name">Classic Burger</h3>
+                    <p class="food-description">Juicy beef patty with fresh lettuce, tomato, and special sauce</p>
+
+                    <div class="food-badges">
+                        <div class="badge badge-popular"><span>Popular</span></div>
+                        <div class="badge badge-chef-special"><span>Chef Special</span></div>
+                    </div>
+
+                    <div class="food-price">
+                        <span class="price-original">$15.99</span>
+                        <span class="price-current">$12.99</span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </section>
+
 </main>
 
 <!-- Food Modal -->

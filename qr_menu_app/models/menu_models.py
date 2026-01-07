@@ -2,7 +2,6 @@ from django.db import models
 
 class ItemCategory(models.Model):
     category_name = models.CharField(max_length=50, null=True, blank=True)
-    category_image = models.ImageField(null=True, blank=True, upload_to="category_image/")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
