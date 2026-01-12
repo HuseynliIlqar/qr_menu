@@ -108,50 +108,78 @@
     </section>
 
     <!-- Categories -->
+    <!-- Categories -->
     <section class="categories-section">
         <div class="categories-container">
+            <button class="category-chip active" data-category="all">Hamısı</button>
+
             {% for items_category in items_categorys %}
-                <button class="category-chip" data-category="all">{{ items_category.category_name }}</button>
+                <button class="category-chip" data-category="{{ items_category.slug }}">
+                    {{ items_category.category_name }}
+                </button>
             {% endfor %}
         </div>
     </section>
+
 
     <!-- Food Grid -->
     <section class="food-grid" id="food-grid">
         {% for menu_item in menu_items %}
             <div class="food-card"
-                 data-name="Classic Burger"
-                 data-long-description="Our signature Classic Burger features a premium beef patty..."
-                 data-image="https://images.unsplash.com/photo-1761315412811-4525e421e00b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
-                 data-price="12.99"
-                 data-original-price="15.99"
-                 data-badges="popular,chef-special"
-                 data-ingredients="Beef patty,Brioche bun,Lettuce,Tomato,Pickles,Onions,Special sauce"
-                 data-allergens="Gluten,Eggs,Dairy">
+                 data-category="{{ menu_item.category.slug|default:'uncategorized' }}"
+                 data-name="{{ menu_item.item_name|default:'' }}"
+                 data-long-description="{{ menu_item.item_description|default:'' }}"
+                 data-image="{% if menu_item.food_image %}{{ menu_item.food_image.url }}{% else %}{% endif %}"
+                 data-price="{{ menu_item.discount_price|default:menu_item.original_price|default:'0' }}"
+                 data-original-price="{{ menu_item.original_price|default:'0' }}"
+
+                 data-badges="
+                         {% for b in menu_item.badges.all %}{{ b.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
+
+                 data-ingredients="{{ menu_item.item_ingredients|default:'' }}"
+                 data-allergens="{{ menu_item.item_waring|default:'' }}">
 
                 <div class="food-image">
-                    <img src="https://images.unsplash.com/photo-1761315412811-4525e421e00b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
-                         alt="Classic Burger">
-                    <div class="discount-badge">Save $3.00</div>
+                    {% if menu_item.food_image %}
+                        <img src="{{ menu_item.food_image.url }}" alt="{{ menu_item.item_name|default:'' }}">
+                    {% else %}
+                        <img src="" alt="{{ menu_item.item_name|default:'' }}">
+                    {% endif %}
+
+                    {% if menu_item.discount_price and menu_item.discount_price > 0 %}
+                        <div class="discount-badge">Save ${{ menu_item.discount_amount }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="food-content">
-                    <h3 class="food-name">Classic Burger</h3>
-                    <p class="food-description">Juicy beef patty with fresh lettuce, tomato, and special sauce</p>
+                    <h3 class="food-name">{{ menu_item.item_name }}</h3>
+                    <p class="food-description">{{ menu_item.item_description }}</p>
 
                     <div class="food-badges">
-                        <div class="badge badge-popular"><span>Popular</span></div>
-                        <div class="badge badge-chef-special"><span>Chef Special</span></div>
+                        {% for b in menu_item.badges.all %}
+                            <div class="badge badge-{{ b.slug }}">
+                                {# icon_svg optionaldır #}
+                                {% if b.icon_svg %}{{ b.icon_svg|safe }}{% endif %}
+                                <span>{{ b.name }}</span>
+                            </div>
+                        {% endfor %}
                     </div>
 
-                    <div class="food-price">
-                        <span class="price-original">$15.99</span>
-                        <span class="price-current">$12.99</span>
-                    </div>
+                    {% if menu_item.discount_price and menu_item.discount_price > 0 %}
+                        <div class="food-price">
+                            <span class="price-original">$ {{ menu_item.original_price }}</span>
+                            <span class="price-current">$ {{ menu_item.discount_price }}</span>
+                        </div>
+                    {% else %}
+                        <div class="food-price">
+                            <span class="price-current">$ {{ menu_item.original_price }}</span>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
     </section>
+
 
 </main>
 

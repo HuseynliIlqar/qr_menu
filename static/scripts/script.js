@@ -10,18 +10,55 @@ const badgeIcons = {
     '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"></path><line x1="6" y1="17" x2="18" y2="17"></line></svg>',
 };
 
-// Current slider state
+// Slider state
 let currentSlide = 0;
 let sliderInterval;
 
-// Initialize
+// ✅ Category filter state
+let selectedCategory = "all";
+
 document.addEventListener("DOMContentLoaded", function () {
   initSlider();
   initModal();
-  initFoodCardClicks(); // ✅ JS filter silindikdən sonra modal üçün lazımdır
+    initFoodCardClicks();
+    initCategoryFilter(); // ✅ yeni
+    applyCategoryFilter("all"); // ✅ default
 });
 
-// Slider Functions (dəyişməyib)
+// --------------------
+// Category Filter
+// --------------------
+function initCategoryFilter() {
+    const chips = document.querySelectorAll(".category-chip");
+    if (!chips || chips.length === 0) return;
+
+    chips.forEach((chip) => {
+        chip.addEventListener("click", () => {
+            const slug = chip.dataset.category || "all";
+            selectedCategory = slug;
+
+            // active class
+            chips.forEach((c) => c.classList.toggle("active", c === chip));
+
+            applyCategoryFilter(slug);
+        });
+    });
+}
+
+function applyCategoryFilter(slug) {
+    const cards = document.querySelectorAll(".food-card");
+    if (!cards || cards.length === 0) return;
+
+    cards.forEach((card) => {
+        const cardCat = card.dataset.category || "uncategorized";
+        const show = (slug === "all") || (cardCat === slug);
+        card.style.display = show ? "" : "none";
+    });
+}
+
+// --------------------
+// Slider (sənin kodun)
+// --------------------
 function initSlider() {
   const slides = document.querySelectorAll(".slide");
   if (!slides || slides.length === 0) return;
@@ -81,7 +118,6 @@ function initSlider() {
     });
   }
 
-  // Touch events for mobile
   let touchStartX = 0;
   let touchEndX = 0;
   const sliderContainer = document.querySelector(".hero-slider");
@@ -120,7 +156,9 @@ function initSlider() {
   startSliderInterval();
 }
 
-// Modal Functions (əsasən eyni)
+// --------------------
+// Modal (sənin kodun + 2 fix)
+// --------------------
 function initModal() {
   const modal = document.getElementById("food-modal");
   const closeBtn = document.getElementById("modal-close");
@@ -138,23 +176,29 @@ function initModal() {
   });
 }
 
-// ✅ Yeni: server-render olunan kartlar üçün click handler
+// ✅ Kart click handler (modal açır) + filter-ə uyğun yalnız görünənlər kliklənsin
 function initFoodCardClicks() {
   document.addEventListener("click", (e) => {
     const card = e.target.closest(".food-card");
     if (!card) return;
+
+      // gizlədilmiş kartlara klik “təsadüfən” düşməsin
+      if (card.style.display === "none") return;
 
     openModalFromCard(card);
   });
 }
 
 function openModalFromCard(card) {
+    const priceRaw = card.dataset.price || "0";
+    const originalRaw = card.dataset.originalPrice || "0";
+
   const item = {
     name: card.dataset.name || "",
     longDescription: card.dataset.longDescription || "",
     image: card.dataset.image || "",
-    price: parseFloat(card.dataset.price || "0"),
-    originalPrice: card.dataset.originalPrice ? parseFloat(card.dataset.originalPrice) : null,
+      price: parseFloat(priceRaw) || 0,
+      originalPrice: parseFloat(originalRaw) || 0,
     badges: (card.dataset.badges || "").split(",").map((s) => s.trim()).filter(Boolean),
     ingredients: (card.dataset.ingredients || "").split(",").map((s) => s.trim()).filter(Boolean),
     allergens: (card.dataset.allergens || "").split(",").map((s) => s.trim()).filter(Boolean),
@@ -167,7 +211,8 @@ function openModal(item) {
   const modal = document.getElementById("food-modal");
   if (!modal) return;
 
-  const hasDiscount = item.originalPrice && item.originalPrice > item.price;
+    // discount şərti daha “məntiqli”
+    const hasDiscount = item.originalPrice > 0 && item.price > 0 && item.originalPrice > item.price;
 
   const modalImg = document.getElementById("modal-img");
   if (modalImg) {
@@ -181,7 +226,6 @@ function openModal(item) {
   const desc = document.getElementById("modal-description");
   if (desc) desc.textContent = item.longDescription || "";
 
-  // Discount badge
   const discountBadge = document.getElementById("modal-discount");
   if (discountBadge) {
     if (hasDiscount) {
@@ -192,7 +236,6 @@ function openModal(item) {
     }
   }
 
-  // Badges
   const badgesContainer = document.getElementById("modal-badges");
   if (badgesContainer) {
     badgesContainer.innerHTML = (item.badges || [])
@@ -207,7 +250,6 @@ function openModal(item) {
       .join("");
   }
 
-  // Price
   const priceContainer = document.getElementById("modal-price");
   if (priceContainer) {
     if (hasDiscount) {
@@ -222,13 +264,11 @@ function openModal(item) {
     }
   }
 
-  // Ingredients
   const ingredientsContainer = document.getElementById("modal-ingredients");
   if (ingredientsContainer) {
     ingredientsContainer.innerHTML = (item.ingredients || []).map((ing) => `<li>${ing}</li>`).join("");
   }
 
-  // Allergens
   const allergensContainer = document.getElementById("modal-allergens");
   if (allergensContainer) {
     if (item.allergens && item.allergens.length > 0) {
