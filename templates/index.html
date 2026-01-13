@@ -104,10 +104,8 @@
                 </div>
             </div>
         {% endfor %}
-
     </section>
 
-    <!-- Categories -->
     <!-- Categories -->
     <section class="categories-section">
         <div class="categories-container">
@@ -121,21 +119,19 @@
         </div>
     </section>
 
-
     <!-- Food Grid -->
     <section class="food-grid" id="food-grid">
         {% for menu_item in menu_items %}
             <div class="food-card"
+                 data-id="{{ menu_item.id }}"
                  data-category="{{ menu_item.category.slug|default:'uncategorized' }}"
                  data-name="{{ menu_item.item_name|default:'' }}"
                  data-long-description="{{ menu_item.item_description|default:'' }}"
                  data-image="{% if menu_item.food_image %}{{ menu_item.food_image.url }}{% else %}{% endif %}"
                  data-price="{{ menu_item.discount_price|default:menu_item.original_price|default:'0' }}"
                  data-original-price="{{ menu_item.original_price|default:'0' }}"
-
                  data-badges="
                          {% for b in menu_item.badges.all %}{{ b.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
-
                  data-ingredients="{{ menu_item.item_ingredients|default:'' }}"
                  data-allergens="{{ menu_item.item_waring|default:'' }}">
 
@@ -158,29 +154,35 @@
                     <div class="food-badges">
                         {% for b in menu_item.badges.all %}
                             <div class="badge badge-{{ b.slug }}">
-                                {# icon_svg optionaldır #}
                                 {% if b.icon_svg %}{{ b.icon_svg|safe }}{% endif %}
                                 <span>{{ b.name }}</span>
                             </div>
                         {% endfor %}
                     </div>
 
-                    {% if menu_item.discount_price and menu_item.discount_price > 0 %}
-                        <div class="food-price">
-                            <span class="price-original">$ {{ menu_item.original_price }}</span>
-                            <span class="price-current">$ {{ menu_item.discount_price }}</span>
-                        </div>
-                    {% else %}
-                        <div class="food-price">
-                            <span class="price-current">$ {{ menu_item.original_price }}</span>
-                        </div>
-                    {% endif %}
+                    <div class="food-footer">
+                        {% if menu_item.discount_price and menu_item.discount_price > 0 %}
+                            <div class="food-price">
+                                <span class="price-original">$ {{ menu_item.original_price }}</span>
+                                <span class="price-current">$ {{ menu_item.discount_price }}</span>
+                            </div>
+                        {% else %}
+                            <div class="food-price">
+                                <span class="price-current">$ {{ menu_item.original_price }}</span>
+                            </div>
+                        {% endif %}
+
+                        <!-- ✅ Add to cart button -->
+                        <button class="add-to-cart-btn" type="button" data-action="add-to-cart"
+                                aria-label="Səbətə əlavə et">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Səbətə</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         {% endfor %}
     </section>
-
-
 </main>
 
 <!-- Food Modal -->
@@ -201,7 +203,15 @@
                 <h2 id="modal-title"></h2>
                 <div id="modal-badges" class="modal-badges"></div>
             </div>
-            <div id="modal-price" class="modal-price"></div>
+
+            <div class="modal-actions">
+                <div id="modal-price" class="modal-price"></div>
+                <button class="modal-add-btn" id="modal-add-to-cart" type="button">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span>Səbətə əlavə et</span>
+                </button>
+            </div>
+
             <div class="modal-section">
                 <h3>Description</h3>
                 <p id="modal-description"></p>
@@ -215,7 +225,45 @@
     </div>
 </div>
 
-<script src={% static 'scripts/script.js' %}></script>
+<!-- ✅ Floating Cart Button -->
+<button class="cart-fab" id="cart-fab" type="button" aria-label="Səbət">
+    <i class="fa-solid fa-bag-shopping"></i>
+    <span class="cart-fab-count" id="cart-count">0</span>
+</button>
+
+<!-- ✅ Cart Modal (one small modal) -->
+<div class="cart-modal" id="cart-modal" aria-hidden="true">
+    <div class="cart-sheet" role="dialog" aria-modal="true" aria-label="Səbət">
+        <div class="cart-header">
+            <h3>Səbət</h3>
+            <button class="cart-close" id="cart-close" type="button" aria-label="Bağla">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="cart-body">
+            <div class="cart-empty" id="cart-empty">
+                Səbət boşdur. Həyat kimi.
+            </div>
+
+            <div class="cart-items" id="cart-items"></div>
+        </div>
+
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Cəm:</span>
+                <strong id="cart-total">$0.00</strong>
+            </div>
+            <button class="cart-submit" id="cart-submit" type="button">
+                Sifarişi göndər
+            </button>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="{% static 'scripts/app/main.js' %}"></script>
 </body>
 </html>
-
