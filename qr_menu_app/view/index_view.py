@@ -48,3 +48,7 @@ def index_view(request):
         "menu_items": menu_items,
     }
     return render(request, "index.html", context)
+
+
+def barmen_admin (request):
+    return render(request,"admin_for_barmen.html")
