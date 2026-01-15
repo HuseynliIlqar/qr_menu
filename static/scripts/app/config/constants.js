@@ -47,3 +47,17 @@ export const MONEY = {
     currencySymbol: "$",
     decimals: 2,
 };
+
+export const STATUSES = {
+    NEW: "NEW",
+    WAITING: "WAITING",
+    CALLED: "CALLED",
+    DELIVERED: "DELIVERED",
+};
+
+export const STATUS_ORDER = {
+    NEW: 0,
+    WAITING: 1,
+    CALLED: 2,
+    DELIVERED: 3,
+};

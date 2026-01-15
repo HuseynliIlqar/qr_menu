@@ -6,3 +6,10 @@ export function escapeHTML(str) {
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
 }
+
+export function escapeHtml(s) {
+  return String(s)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}

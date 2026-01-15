@@ -1,12 +1,11 @@
 {% load static %}
 <!doctype html>
 <html lang="az">
-
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <title>Bar Panel</title>
-    <link rel="stylesheet" href={% static 'style/barmen_panel_style.css' %}>
+    <link rel="stylesheet" href="{% static 'style/barmen_panel_style.css' %}">
 </head>
 
 <body>
@@ -16,9 +15,9 @@
             <div class="brand">Bar Panel</div>
             <div class="muted">Order intake + fulfillment. Less drama, more coffee.</div>
         </div>
+
         <div class="actions">
-            <button class="btn" id="btnOpenIntake">Sifariş № daxil et</button>
-            <button class="btn primary" id="btnMockNew">+ Mock NEW</button>
+            <button class="btn" id="btnOpenIntake" type="button">Sifariş № daxil et</button>
         </div>
     </div>
 
@@ -43,20 +42,19 @@
             </div>
 
             <div class="divider"></div>
-
         </div>
     </div>
 </div>
 
 <!-- Intake Modal (small) -->
-<div class="modal-backdrop" id="intakeBackdrop" aria-hidden="true">
+<div class="modal-backdrop" id="intakeBackdrop" aria-hidden="true" style="display:none">
     <div class="modal small">
         <div class="modal-head">
             <div>
                 <div style="font-weight:800">Sifariş qəbul et</div>
                 <div class="muted">Sadəcə sifariş nömrəsini yaz, səbəti gətirək.</div>
             </div>
-            <button class="x" data-close="intake">Bağla</button>
+            <button class="x" data-close="intake" type="button">Bağla</button>
         </div>
 
         <div class="field">
@@ -65,27 +63,27 @@
         </div>
 
         <div style="display:flex;gap:10px;justify-content:flex-end">
-            <button class="btn" data-close="intake">Ləğv et</button>
-            <button class="btn primary" id="btnFetchCart">Səbəti gətir</button>
+            <button class="btn" data-close="intake" type="button">Ləğv et</button>
+            <button class="btn primary" id="btnFetchCart" type="button">Səbəti gətir</button>
         </div>
     </div>
 </div>
 
 <!-- Order Details Modal -->
-<div class="modal-backdrop" id="detailBackdrop" aria-hidden="true">
+<div class="modal-backdrop" id="detailBackdrop" aria-hidden="true" style="display:none">
     <div class="modal">
         <div class="modal-head">
             <div>
                 <div style="font-weight:900" id="detailTitle">Sifariş #</div>
                 <div class="muted" id="detailMeta"></div>
             </div>
-            <button class="x" data-close="detail">Bağla</button>
+            <button class="x" data-close="detail" type="button">Bağla</button>
         </div>
 
         <div class="two">
             <div>
                 <h2>Items (edit mümkündür)</h2>
-                <div class="muted">Barmen üçün: “çıxart, əlavə et, qty dəyiş”.</div>
+                <div class="muted">“çıxart, əlavə et, qty dəyiş”.</div>
                 <div class="divider"></div>
 
                 <table id="itemsTable">
@@ -100,12 +98,12 @@
                     <tbody></tbody>
                 </table>
 
-                <!-- ✅ DB-dən gələn məhsul dropdown -->
+                <!-- DB-dən gələn məhsul dropdown -->
                 <div class="field">
                     <label class="muted">Məhsul seç (DB-dən)</label>
                     <div style="display:flex;gap:10px">
                         <select id="productSelect" style="flex:1"></select>
-                        <button class="btn" id="btnAddProduct">Əlavə et</button>
+                        <button class="btn" id="btnAddProduct" type="button">Əlavə et</button>
                     </div>
                     <div class="muted">Realda bu siyahı Django admin-dəki MenuItem-lardan gələcək.</div>
                 </div>
@@ -122,10 +120,15 @@
                 <div class="divider"></div>
 
                 <div style="display:flex;flex-direction:column;gap:10px">
-                    <button class="btn good" id="btnAccept">Qəbul et (WAITING)</button>
-                    <button class="btn warn" id="btnCall">Müştərini çağır (CALLED)</button>
-                    <button class="btn bad" id="btnDeliver">Təhvil verdim (DELIVERED)</button>
+                    <button class="btn good" id="btnAccept" type="button">Qəbul et (WAITING)</button>
+                    <button class="btn warn" id="btnCall" type="button">Müştərini çağır (CALLED)</button>
+                    <button class="btn bad" id="btnDeliver" type="button">Təhvil verdim (DELIVERED)</button>
                 </div>
+
+                <div class="divider"></div>
+
+                <!-- ✅ SƏBƏTİ (ORDER) TAM SİL -->
+                <button class="btn bad" id="btnDeleteOrder" type="button">Sifarişi sil</button>
 
                 <div class="divider"></div>
                 <h2>Qeydlər</h2>
@@ -144,5 +147,4 @@
 
 <script type="module" src="{% static 'scripts/barmen_panel_script.js' %}"></script>
 </body>
-
 </html>
