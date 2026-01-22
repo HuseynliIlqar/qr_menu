@@ -4,6 +4,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+public_key.pem
+private_key.pem
+
+
 # C extensions
 *.so
 

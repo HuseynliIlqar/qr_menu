@@ -1,15 +1,23 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv()
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_URL = "static/"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-SECRET_KEY = "django-insecure-42dr5mfn%x61rvd%+0e0-gi2q3tedoh97jacscuc#0kbiq2_q)"
-DEBUG = True
+WEBPUSH_VAPID_PRIVATE_KEY = os.getenv("WEBPUSH_VAPID_PRIVATE_KEY")
+WEBPUSH_VAPID_PUBLIC_KEY = os.getenv("WEBPUSH_VAPID_PUBLIC_KEY")
+WEBPUSH_ADMIN_EMAIL = os.getenv("WEBPUSH_ADMIN_EMAIL")
+
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG") == "true"
 ALLOWED_HOSTS = ["*"]
 
 
@@ -91,11 +99,11 @@ TEMPLATES = [
 DATABASES = {
     "default": {
         "ENGINE": "django_tenants.postgresql_backend",
-        "NAME": "qr_menu_db",
-        "USER": "postgres",
-        "PASSWORD": "asd",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.getenv("DB_PORT", "5432"),
     }
 }
 

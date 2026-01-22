@@ -154,7 +154,6 @@
                         {% for b in menu_item.badges.all %}
                             <div class="badge badge-{{ b.slug }}">
                                 {% if b.icon_svg %}{{ b.icon_svg|safe }}{% endif %}
-                                <span>{{ b.name }}</span>
                             </div>
                         {% endfor %}
                     </div>
