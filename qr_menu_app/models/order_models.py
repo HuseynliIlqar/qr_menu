@@ -7,7 +7,7 @@ def generate_5_digit_code():
     return f"{random.randint(10000, 99999)}"
 
 
-class Order(models.Model):
+class CustomerOrder(models.Model):
     class Status(models.TextChoices):
         NEW = "new", "New"
         REJECTED = "rejected", "Rejected"
