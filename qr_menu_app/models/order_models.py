@@ -22,6 +22,7 @@ class CustomerOrder(models.Model):
 
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.NEW)
 
+    accepted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     rejected_at = models.DateTimeField(null=True, blank=True)
     called_at = models.DateTimeField(null=True, blank=True)

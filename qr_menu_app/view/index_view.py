@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from qr_menu_app.models import ItemCategory, MenuItem
+from qr_menu_app.models import ItemCategory, MenuItem, CustomerOrder
 from qr_menu_app.models.navbar_model import NavbarSocialMedia, MainSection, InfoSection, HeroSlide
 
 
@@ -15,6 +15,7 @@ def index_view(request):
     slides = HeroSlide.objects.filter(is_active=True).order_by('id')
 
     items_category = ItemCategory.objects.filter(is_active=True)
+
 
     menu_items = MenuItem.objects.filter(is_active=True)
 

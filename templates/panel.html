@@ -1,0 +1,72 @@
+{% load static %}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Kassir Panel</title>
+    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+</head>
+<body>
+<main class="container" style="padding:2rem 1rem;">
+    <h2>Kassir Panel</h2>
+
+    <div class="info-card" style="margin-top:1rem;">
+        <div class="info-content" style="width:100%;">
+            <div class="info-label">Scan payload (QR içi JSON)</div>
+            <textarea id="scan-input"
+                      style="width:100%;height:90px;border:1px solid var(--border-color);border-radius:12px;padding:10px;"></textarea>
+
+            <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;">
+                <input id="floor-input" type="number" placeholder="Mərtəbə"
+                       style="width:140px;border:1px solid var(--border-color);border-radius:9999px;padding:10px 12px;">
+                <input id="name-input" type="text" placeholder="Ad (opsional)"
+                       style="flex:1;min-width:180px;border:1px solid var(--border-color);border-radius:9999px;padding:10px 12px;">
+                <button id="accept-btn" class="cart-submit" type="button" style="width:180px;">Qəbul et</button>
+            </div>
+
+            <div id="msg" style="margin-top:10px;color:var(--text-light)"></div>
+        </div>
+    </div>
+
+    <section style="margin-top:1.5rem;">
+        <h3>Scan olunmuş sifarişlər</h3>
+
+        {% if orders %}
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px;">
+                {% for o in orders %}
+                    <div class="info-card" style="padding:12px;">
+                        <div class="info-content" style="width:100%;">
+                            <div class="info-label">
+                                Kod: <strong>{{ o.order_code }}</strong> | Status: {{ o.status }}
+                            </div>
+                            <div class="info-value">
+                                Mərtəbə: {{ o.floor|default:"-" }} | Ad: {{ o.customer_name|default:"-" }}
+                            </div>
+
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+                                <button class="add-to-cart-btn" data-action="call" data-id="{{ o.id }}" type="button">
+                                    Çağır
+                                </button>
+                                <button class="add-to-cart-btn" data-action="deliver" data-id="{{ o.id }}"
+                                        type="button">Təhvil
+                                </button>
+                                <button class="add-to-cart-btn" data-action="reject" data-id="{{ o.id }}" type="button"
+                                        style="border-color:var(--red);color:var(--red);">Ləğv
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div style="margin-top:10px;color:var(--text-light);">
+                Hələ heç nə scan olunmayıb. Təəccüblü deyil.
+            </div>
+        {% endif %}
+    </section>
+</main>
+
+<script type="module" src="{% static 'scripts/cashier_panel.js' %}"></script>
+</body>
+</html>

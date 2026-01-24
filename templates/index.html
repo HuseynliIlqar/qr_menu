@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delizioso - Restaurant</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href={% static 'style/styles.css' %}>
 </head>
 <body>
@@ -171,11 +172,11 @@
                         {% endif %}
 
                         <!-- ✅ Add to cart button -->
-                        <button class="add-to-cart-btn" type="button" data-action="add-to-cart"
-                                aria-label="Səbətə əlavə et">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>Səbətə</span>
-                        </button>
+{#                        <button class="add-to-cart-btn" type="button" data-action="add-to-cart"#}
+{#                                aria-label="Səbətə əlavə et">#}
+{#                            <i class="fa-solid fa-plus"></i>#}
+{#                            <span>Səbətə</span>#}
+{#                        </button>#}
                     </div>
                 </div>
             </div>
@@ -204,10 +205,10 @@
 
             <div class="modal-actions">
                 <div id="modal-price" class="modal-price"></div>
-                <button class="modal-add-btn" id="modal-add-to-cart" type="button">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    <span>Səbətə əlavə et</span>
-                </button>
+{#                <button class="modal-add-btn" id="modal-add-to-cart" type="button">#}
+{#                    <i class="fa-solid fa-bag-shopping"></i>#}
+{#                    <span>Səbətə əlavə et</span>#}
+{#                </button>#}
             </div>
 
             <div class="modal-section">
@@ -228,7 +229,6 @@
     <i class="fa-solid fa-bag-shopping"></i>
     <span class="cart-fab-count" id="cart-count">0</span>
 </button>
-
 <!-- ✅ Cart Modal (one small modal) -->
 <div class="cart-modal" id="cart-modal" aria-hidden="true">
     <div class="cart-sheet" role="dialog" aria-modal="true" aria-label="Səbət">
@@ -262,6 +262,53 @@
     </div>
 </div>
 
+
+<!-- ✅ Customer Call Button -->
+<button class="call-fab" id="call-fab" type="button" aria-label="Müştəri QR">
+    <i class="fa-solid fa-qrcode"></i>
+</button>
+
+<!-- ✅ Customer Call Modal -->
+<div class="call-modal" id="call-modal" aria-hidden="true">
+    <div class="call-sheet" role="dialog" aria-modal="true" aria-label="Müştəri QR">
+        <div class="call-header">
+            <h3>Müştəri QR</h3>
+            <button class="call-close" id="call-close" type="button" aria-label="Bağla">✕</button>
+        </div>
+
+        <div class="call-body">
+            <p class="call-hint">
+                Bu QR kodu kassirə göstərin. Kassir scan edəcək və mərtəbənizi qeyd edəcək.
+            </p>
+
+            <div class="call-qr-wrap">
+                <div id="call-qr"></div>
+            </div>
+
+            <div class="call-meta">
+                <div>Kod: <strong id="call-code">-----</strong></div>
+            </div>
+
+            <div class="call-actions">
+                <button class="call-primary" id="call-enable-push" type="button">
+                    Bildirişləri aktiv et
+                </button>
+                <button class="call-secondary" id="call-refresh" type="button">
+                    Yenilə
+                </button>
+            </div>
+
+            <div class="call-note" id="call-note"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.__VAPID_PUBLIC_KEY__ = "{{ VAPID_PUBLIC_KEY }}";
+    window.__CSRF_TOKEN__ = "{{ csrf_token }}";
+</script>
+
 <script type="module" src="{% static 'scripts/app/main.js' %}"></script>
+<script type="module" src="{% static 'scripts/customer_push.js' %}"></script>
 </body>
 </html>
