@@ -3,7 +3,7 @@ from django.conf import settings
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import render
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from qr_menu_app.models import CustomerOrder
 from qr_menu_app.services.webpush import send_push
@@ -34,7 +34,7 @@ def customer_call_page(request):
     })
 
 
-@csrf_protect
+@csrf_exempt
 @require_POST
 def create_order(request):
     order = CustomerOrder.create_with_unique_code()
@@ -57,7 +57,7 @@ def cashier_panel(request):
     return render(request, "panel.html", {"orders": orders})
 
 
-@csrf_protect
+@csrf_exempt
 @require_POST
 def cashier_accept(request):
     if not _require_cashier(request):
@@ -104,7 +104,7 @@ def cashier_accept(request):
     })
 
 
-@csrf_protect
+@csrf_exempt
 @require_POST
 def cashier_action(request, order_id):
     if not _require_cashier(request):

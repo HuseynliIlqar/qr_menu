@@ -36,7 +36,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 WSGI_APPLICATION = "core.wsgi.application"
 ROOT_URLCONF = "core.urls"
 
-PUBLIC_SCHEMA_NAME = "public"
+# PUBLIC_SCHEMA_NAME = "public"
 
 # SHARED_APPS = (
 #     "django_tenants",
@@ -71,12 +71,12 @@ INSTALLED_APPS = [
     'qr_menu_app',
 ]
 
-TENANT_MODEL = "public.Client"
-TENANT_DOMAIN_MODEL = "public.Domain"
+# TENANT_MODEL = "public.Client"
+# TENANT_DOMAIN_MODEL = "public.Domain"
 
-DATABASE_ROUTERS = (
-    "django_tenants.routers.TenantSyncRouter",
-)
+# DATABASE_ROUTERS = (
+#     "django_tenants.routers.TenantSyncRouter",
+# )
 
 MIDDLEWARE = [
     # "django_tenants.middleware.main.TenantMainMiddleware",
@@ -106,23 +106,23 @@ TEMPLATES = [
     },
 ]
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django_tenants.postgresql_backend",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST", "localhost"),
-        "PORT": os.getenv("DB_PORT", "5432"),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+#
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django_tenants.postgresql_backend",
+#         "NAME": os.getenv("DB_NAME"),
+#         "USER": os.getenv("DB_USER"),
+#         "PASSWORD": os.getenv("DB_PASSWORD"),
+#         "HOST": os.getenv("DB_HOST", "localhost"),
+#         "PORT": os.getenv("DB_PORT", "5432"),
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},

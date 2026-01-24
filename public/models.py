@@ -9,8 +9,7 @@ class Client(TenantMixin):
     auto_create_schema = True
 
 
-    def __str__(self):
-        return self.schema_name
+
 
 class Domain(DomainMixin):
     created_at = models.DateTimeField(auto_now_add=True)

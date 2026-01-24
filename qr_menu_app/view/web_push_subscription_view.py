@@ -1,12 +1,12 @@
 import json
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from qr_menu_app.models import CustomerOrder
 from qr_menu_app.services.webpush import upsert_order_subscription
 
 
-@csrf_protect
+@csrf_exempt
 @require_POST
 def save_order_subscription(request, order_id):
     try:
