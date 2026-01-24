@@ -27,10 +27,10 @@ def customer_call_page(request):
         "customer_token": str(order.customer_token),
     })
 
-    return render(request, "customer_call.html", {
+    return render(request, "index.html", {
         "order": order,
         "qr_payload": qr_payload,
-        "VAPID_PUBLIC_KEY": getattr(settings, "VAPID_PUBLIC_KEY", ""),
+        "WEBPUSH_VAPID_PUBLIC_KEY": settings.WEBPUSH_VAPID_PUBLIC_KEY,
     })
 
 

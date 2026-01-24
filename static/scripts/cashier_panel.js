@@ -1,7 +1,4 @@
 // cashier_panel.js
-// 2 rejim:
-// 1) JSON-render: panel.html-də <div id="orders"></div> varsa -> loadOrders() DOM-a basır
-// 2) DTL-render: orders div yoxdursa -> accept/action sonrası location.reload()
 
 const els = {
   scan: document.getElementById("scan-input"),
@@ -19,11 +16,10 @@ function setMsg(t) {
 }
 
 function getCookie(name) {
-  const row = document.cookie.split("; ").find(r => r.startsWith(name + "="));
+  const row = document.cookie.split("; ").find((r) => r.startsWith(name + "="));
   return row ? decodeURIComponent(row.split("=")[1]) : null;
 }
 
-// CSRF: əvvəl window inject, yoxdursa cookie
 const CSRF_TOKEN = window.__CSRF_TOKEN__ || getCookie("csrftoken") || "";
 
 function orderRow(o) {
@@ -54,7 +50,11 @@ function orderRow(o) {
 async function loadOrders() {
   if (!USE_JSON_RENDER) return;
 
-  const res = await fetch("/cashier/orders/", { method: "GET" });
+  const res = await fetch("/cashier/orders/", {
+    method: "GET",
+    credentials: "same-origin",
+  });
+
   if (!res.ok) {
     setMsg("Orders yüklənmədi.");
     return;
@@ -67,9 +67,7 @@ async function loadOrders() {
   }
 
   els.orders.innerHTML = "";
-  for (const o of data.orders) {
-    els.orders.appendChild(orderRow(o));
-  }
+  for (const o of data.orders) els.orders.appendChild(orderRow(o));
 }
 
 function afterMutation() {
@@ -118,6 +116,7 @@ async function acceptOrder() {
       floor,
       customer_name,
     }),
+    credentials: "same-origin",
   });
 
   if (!res.ok) {
@@ -145,6 +144,7 @@ async function doAction(orderId, action) {
       "X-CSRFToken": CSRF_TOKEN,
     },
     body: JSON.stringify({ action }),
+    credentials: "same-origin",
   });
 
   if (!res.ok) {
@@ -177,4 +177,76 @@ if (USE_JSON_RENDER) {
 
 // init
 loadOrders();
-// if (USE_JSON_RENDER) setInterval(loadOrders, 5000);
+
+// --- Camera scan (Html5Qrcode) ---
+const cam = {
+  openBtn: document.getElementById("open-camera"),
+  modal: document.getElementById("camera-modal"),
+  closeBtn: document.getElementById("close-camera"),
+  readerEl: document.getElementById("qr-reader"),
+};
+
+let qrScanner = null;
+
+function openCamModal() {
+  cam.modal?.classList.add("active");
+  cam.modal?.setAttribute("aria-hidden", "false");
+}
+
+function closeCamModal() {
+  cam.modal?.classList.remove("active");
+  cam.modal?.setAttribute("aria-hidden", "true");
+}
+
+async function startScanner() {
+  if (!cam.readerEl) return;
+
+  qrScanner = new Html5Qrcode("qr-reader");
+  const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+  await qrScanner.start(
+    { facingMode: "environment" },
+    config,
+    async (decodedText) => {
+      if (els.scan) els.scan.value = decodedText;
+      setMsg("QR oxundu. Qəbul edilir...");
+      await stopScanner();
+      closeCamModal();
+      await acceptOrder();
+    },
+    () => {}
+  );
+}
+
+async function stopScanner() {
+  try {
+    if (qrScanner) {
+      await qrScanner.stop();
+      await qrScanner.clear();
+      qrScanner = null;
+    }
+  } catch {}
+}
+
+cam.openBtn?.addEventListener("click", async () => {
+  openCamModal();
+  try {
+    await startScanner();
+  } catch (e) {
+    setMsg("Kamera açılmadı. HTTPS və permission yoxla.");
+    console.error(e);
+    closeCamModal();
+  }
+});
+
+cam.closeBtn?.addEventListener("click", async () => {
+  await stopScanner();
+  closeCamModal();
+});
+
+cam.modal?.addEventListener("click", async (e) => {
+  if (e.target === cam.modal) {
+    await stopScanner();
+    closeCamModal();
+  }
+});

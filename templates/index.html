@@ -304,10 +304,11 @@
 </div>
 
 <script>
-    window.__VAPID_PUBLIC_KEY__ = "{{ VAPID_PUBLIC_KEY }}";
-    window.__CSRF_TOKEN__ = "{{ csrf_token }}";
-</script>
 
+    window.__VAPID_PUBLIC_KEY__ = "{{ WEBPUSH_VAPID_PUBLIC_KEY }}";
+    window.__CSRF_TOKEN__ = "{{ csrf_token }}";
+    window.__SW_URL__ = "{% static 'sw.js' %}";
+</script>
 <script type="module" src="{% static 'scripts/app/main.js' %}"></script>
 <script type="module" src="{% static 'scripts/customer_push.js' %}"></script>
 </body>

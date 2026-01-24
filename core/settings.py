@@ -12,9 +12,14 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 WEBPUSH_VAPID_PRIVATE_KEY = os.getenv("WEBPUSH_VAPID_PRIVATE_KEY")
-WEBPUSH_VAPID_PUBLIC_KEY = os.getenv("WEBPUSH_VAPID_PUBLIC_KEY")
-WEBPUSH_ADMIN_EMAIL = os.getenv("WEBPUSH_ADMIN_EMAIL")
 
+WEBPUSH_VAPID_PUBLIC_KEY = os.getenv("WEBPUSH_VAPID_PUBLIC_KEY")
+
+WEBPUSH_ADMIN_EMAIL = os.getenv("WEBPUSH_ADMIN_EMAIL", "mailto:admin@example.com")
+
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG") == "true"
@@ -33,28 +38,38 @@ ROOT_URLCONF = "core.urls"
 
 PUBLIC_SCHEMA_NAME = "public"
 
-SHARED_APPS = (
-    "django_tenants",
-    "public",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "django.contrib.admin",
-    "django.contrib.auth"
-)
+# SHARED_APPS = (
+#     "django_tenants",
+#     "public",
+#     "django.contrib.contenttypes",
+#     "django.contrib.sessions",
+#     "django.contrib.messages",
+#     "django.contrib.staticfiles",
+#     "django.contrib.admin",
+#     "django.contrib.auth"
+# )
+#
+# TENANT_APPS = (
+#     "qr_menu_app",
+#     # "django.contrib.contenttypes",
+#     # "django.contrib.sessions",
+#     # "django.contrib.messages",
+#     # "django.contrib.staticfiles",
+#     # "django.contrib.admin",
+#     # "django.contrib.auth"
+# )
 
-TENANT_APPS = (
-    "qr_menu_app",
-    # "django.contrib.contenttypes",
-    # "django.contrib.sessions",
-    # "django.contrib.messages",
-    # "django.contrib.staticfiles",
-    # "django.contrib.admin",
-    # "django.contrib.auth"
-)
+# INSTALLED_APPS = SHARED_APPS + TENANT_APPS
 
-INSTALLED_APPS = SHARED_APPS + TENANT_APPS
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'qr_menu_app',
+]
 
 TENANT_MODEL = "public.Client"
 TENANT_DOMAIN_MODEL = "public.Domain"
@@ -64,7 +79,7 @@ DATABASE_ROUTERS = (
 )
 
 MIDDLEWARE = [
-    "django_tenants.middleware.main.TenantMainMiddleware",
+    # "django_tenants.middleware.main.TenantMainMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -84,6 +99,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                'qr_menu_app.context_processors.webpush_keys',
+                'django.template.context_processors.csrf',
             ],
         },
     },

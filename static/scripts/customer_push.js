@@ -1,5 +1,13 @@
-// customer_push.js
-// sw.js script tag ilə çağırılmır, register burada edilir.
+// customer_push.js (module)
+
+console.log("[customer_push] loaded");
+
+window.addEventListener("error", (e) => {
+  console.error("[customer_push] error:", e.message, e.filename, e.lineno);
+});
+window.addEventListener("unhandledrejection", (e) => {
+  console.error("[customer_push] promise:", e.reason);
+});
 
 const els = {
   fab: document.getElementById("call-fab"),
@@ -15,17 +23,17 @@ const els = {
 let currentOrder = null;
 
 const VAPID_PUBLIC_KEY = window.__VAPID_PUBLIC_KEY__ || "";
+const SW_URL = window.__SW_URL__ || "/static/sw.js";
 
-// CSRF helper (inject -> cookie)
 function getCookie(name) {
   const row = document.cookie.split("; ").find(r => r.startsWith(name + "="));
   return row ? decodeURIComponent(row.split("=")[1]) : null;
 }
 const CSRF_TOKEN = window.__CSRF_TOKEN__ || getCookie("csrftoken") || "";
 
-// Persist (F5-də itməsin)
+// Persist
 const ORDER_STORAGE_KEY = "qrmenu_customer_call_order_v1";
-const ORDER_TTL_MS = 1000 * 60 * 30; // 30 dəqiqə
+const ORDER_TTL_MS = 1000 * 60 * 30;
 
 function setNote(msg) {
   if (els.note) els.note.textContent = msg || "";
@@ -42,8 +50,10 @@ function closeModal() {
 }
 
 function saveOrderToStorage(order) {
-  const payload = { ...order, saved_at: Date.now() };
-  localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(payload));
+  localStorage.setItem(
+    ORDER_STORAGE_KEY,
+    JSON.stringify({ ...order, saved_at: Date.now() })
+  );
 }
 
 function loadOrderFromStorage() {
@@ -68,7 +78,6 @@ function clearOrderStorage() {
   localStorage.removeItem(ORDER_STORAGE_KEY);
 }
 
-// ✅ CSRF ilə create order
 async function createOrder() {
   const res = await fetch("/orders/create/", {
     method: "POST",
@@ -76,26 +85,24 @@ async function createOrder() {
       "X-CSRFToken": CSRF_TOKEN,
       "Content-Type": "application/json",
     },
-    body: "{}", // POST üçün boş payload
+    body: "{}",
+    credentials: "same-origin",
   });
-
-  if (!res.ok) {
-    // debug üçün status göstərək
-    throw new Error(`Order create failed: ${res.status}`);
-  }
+  if (!res.ok) throw new Error(`Order create failed: ${res.status}`);
   return await res.json(); // {order_id, order_code, customer_token}
 }
 
-// QRCode.js global olmalıdır (CDN ilə gətirmisən)
 function renderQR(payloadText) {
   if (!els.qr) return;
   els.qr.innerHTML = "";
+  if (typeof QRCode === "undefined") throw new Error("QRCode library not loaded");
   new QRCode(els.qr, { text: payloadText, width: 220, height: 220 });
 }
 
 function renderFromOrder(order, noteText) {
   currentOrder = order;
-  if (els.code) els.code.textContent = currentOrder.order_code;
+
+  if (els.code) els.code.textContent = currentOrder.order_code || "-----";
 
   const qrPayload = JSON.stringify({
     order_code: currentOrder.order_code,
@@ -124,12 +131,24 @@ async function initOrderAndQR({ forceNew = false } = {}) {
 
 async function registerSW() {
   if (!("serviceWorker" in navigator)) throw new Error("SW not supported");
-  return await navigator.serviceWorker.register("/static/sw.js");
+
+  console.log("[customer_push] registering SW:", SW_URL);
+
+  const reg = await navigator.serviceWorker.register(SW_URL);
+  console.log("[customer_push] SW registered scope:", reg.scope);
+
+  // dev-də köhnə SW qalıbsa update faydalıdır
+  try { await reg.update(); } catch {}
+
+  return reg;
 }
 
 function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const base64 = (base64String + padding)
+    .replace(/-/g, "+")
+    .replace(/_/g, "/");
+
   const raw = atob(base64);
   const arr = new Uint8Array(raw.length);
   for (let i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
@@ -145,25 +164,28 @@ async function subscribePush() {
   }
 
   const perm = await Notification.requestPermission();
+  console.log("[customer_push] permission:", perm);
+
   if (perm !== "granted") {
     setNote("Bildiriş icazəsi verilmədi. QR işləyir, sadəcə push gəlməyəcək.");
     return;
   }
 
-  await registerSW();
-  const reg = await navigator.serviceWorker.ready;
+  // ✅ 1-ci variant: ready YOX, register-in verdiyi reg ilə işləyirik.
+  const reg = await registerSW();
+
+  // Əgər SW_URL 404 olarsa burada partlayacaq, yaxşı da eləyəcək.
+  if (!reg.pushManager) throw new Error("pushManager yoxdur (SW problemi).");
 
   const existing = await reg.pushManager.getSubscription();
-  const sub =
-    existing ||
-    (await reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-    }));
+  const sub = existing || await reg.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+  });
 
   const body = sub.toJSON();
+  console.log("[customer_push] subscription json:", body);
 
-  // ✅ CSRF ilə subscribe (view-in csrf_exempt olmasa da işləsin)
   const res = await fetch(`/orders/${currentOrder.order_id}/push/subscribe/`, {
     method: "POST",
     headers: {
@@ -171,8 +193,10 @@ async function subscribePush() {
       "X-CSRFToken": CSRF_TOKEN,
     },
     body: JSON.stringify(body),
+    credentials: "same-origin",
   });
 
+  console.log("[customer_push] subscribe response:", res.status);
   if (!res.ok) throw new Error(`Subscription save failed: ${res.status}`);
 
   setNote("Bildirişlər aktivdir. Kassir çağıranda push gələcək.");
@@ -206,13 +230,19 @@ els.refresh?.addEventListener("click", async () => {
 });
 
 els.enablePush?.addEventListener("click", async () => {
+  console.log("[customer_push] enablePush clicked", {
+    currentOrder,
+    VAPID_PUBLIC_KEY: !!VAPID_PUBLIC_KEY,
+    CSRF_TOKEN: !!CSRF_TOKEN,
+    SW_URL,
+  });
+
   try {
+    // QR olmadan push “hansı order üçün subscribe” bilmir
+    if (!currentOrder) await initOrderAndQR({ forceNew: false });
     await subscribePush();
   } catch (e) {
-    setNote("Push aktivləşmədi (permission/CSRF/VAPID).");
+    setNote("Push aktivləşmədi (permission/CSRF/VAPID/SW).");
     console.error(e);
   }
 });
-
-// Optional: page load zamanı cached state
-// currentOrder = loadOrderFromStorage();
