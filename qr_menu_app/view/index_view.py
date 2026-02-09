@@ -1,7 +1,5 @@
 from django.shortcuts import render
-from qr_menu_app.forms import NavbarSocialMediaForm
 from qr_menu_app.models import ItemCategory, MenuItem
-from qr_menu_app.models.brand_customisation import BrandTheme
 from qr_menu_app.models.navbar_model import NavbarSocialMedia, MainSection, InfoSection, HeroSlide
 
 
@@ -15,7 +13,6 @@ def index_view(request):
     info_section_count = info_section_obj.count()
 
     slides = HeroSlide.objects.filter(is_active=True).order_by('id')
-    form = NavbarSocialMediaForm()
 
     items_category = ItemCategory.objects.filter(is_active=True)
 
@@ -31,19 +28,13 @@ def index_view(request):
     )
 
 
-    theme = None
-    if navbar:
-        theme, _ = BrandTheme.objects.get_or_create(main_section=navbar)
-
     context = {
-        "theme": theme,
         "navbar": navbar,
         "social_media_navbars": social_media_qs,
         "can_add_social_media": can_add_social_media,
         "info_sections": info_section_obj,
         "can_add_info_sections": can_add_info_section,
         "slides": slides,
-        "form": form,
         "items_categorys": items_category,
         "menu_items": menu_items,
     }
