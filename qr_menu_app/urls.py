@@ -1,17 +1,13 @@
 from django.urls import path
+from qr_menu_app.view.create_social_media_icon_function import add_social_media, delete_social_media
+from qr_menu_app.view.index_slider_view import add_index_slider
 from qr_menu_app.view.index_view import index_view
-from qr_menu_app.view.panel_view import cashier_panel, customer_call_page, cashier_orders_list, create_order, \
-    cashier_action, cashier_accept
-from qr_menu_app.view.web_push_subscription_view import save_order_subscription
+from qr_menu_app.view.update_page_h1 import update_page_h1
 
 urlpatterns = [
     path('', index_view, name='home'),
-    path("orders/<int:order_id>/push/subscribe/", save_order_subscription, name="save_order_subscription"),
-    path("orders/create/", create_order),
-    path("cashier/orders/accept/", cashier_accept),
-    path("cashier/orders/<int:order_id>/action/", cashier_action),
-    path("cashier/", cashier_panel, name="cashier_panel"),
-    path("cashier/orders/accept/", cashier_accept),
-    path("cashier/orders/", cashier_orders_list),
-    path("customer/call/", customer_call_page, name="customer_call"),
+    path("update_page/", update_page_h1, name="update_page"),
+    path("navbar/<int:navbar_id>/social-media/add/", add_social_media, name="add_social_media"),
+    path("social-media/<int:pk>/delete/",delete_social_media,name="delete_social_media"),
+    path("add_index_slider/", add_index_slider, name="add_index_slider"),
 ]

@@ -10,7 +10,7 @@ class DomainInLine(admin.TabularInline):
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ("id", "created_at", "updated_at")
+    list_display = ("id","schema_name", "created_at", "updated_at")
     inlines = [DomainInLine]
 
 
